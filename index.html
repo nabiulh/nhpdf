@@ -19,57 +19,13 @@
             --page-text: #1a1a1a;
         }
         
-        .theme-ocean {
-            --primary: #0ea5e9;
-            --secondary: #06b6d4;
-            --bg: #0c1222;
-            --surface: #1a2744;
-            --text: #e0f2fe;
-            --accent: #38bdf8;
-        }
+        .theme-ocean { --primary: #0ea5e9; --secondary: #06b6d4; --bg: #0c1222; --surface: #1a2744; --text: #e0f2fe; --accent: #38bdf8; }
+        .theme-forest { --primary: #22c55e; --secondary: #10b981; --bg: #0a1a12; --surface: #14332a; --text: #dcfce7; --accent: #4ade80; }
+        .theme-sunset { --primary: #f97316; --secondary: #fb923c; --bg: #1c0f0a; --surface: #3d2317; --text: #ffedd5; --accent: #fdba74; }
+        .theme-rose { --primary: #ec4899; --secondary: #f472b6; --bg: #1a0a14; --surface: #3d1a2e; --text: #fce7f3; --accent: #f9a8d4; }
+        .theme-light { --primary: #6366f1; --secondary: #8b5cf6; --bg: #f8fafc; --surface: #ffffff; --text: #1e293b; --accent: #3b82f6; }
         
-        .theme-forest {
-            --primary: #22c55e;
-            --secondary: #10b981;
-            --bg: #0a1a12;
-            --surface: #14332a;
-            --text: #dcfce7;
-            --accent: #4ade80;
-        }
-        
-        .theme-sunset {
-            --primary: #f97316;
-            --secondary: #fb923c;
-            --bg: #1c0f0a;
-            --surface: #3d2317;
-            --text: #ffedd5;
-            --accent: #fdba74;
-        }
-        
-        .theme-rose {
-            --primary: #ec4899;
-            --secondary: #f472b6;
-            --bg: #1a0a14;
-            --surface: #3d1a2e;
-            --text: #fce7f3;
-            --accent: #f9a8d4;
-        }
-        
-        .theme-light {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --text: #1e293b;
-            --accent: #3b82f6;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Noto Sans Bengali', sans-serif; }
         
         body {
             background: var(--bg);
@@ -80,52 +36,22 @@
             position: relative;
         }
         
-        /* MS Word Style Background */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 1) 100%),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 50px,
-                    rgba(99, 102, 241, 0.03) 50px,
-                    rgba(99, 102, 241, 0.03) 51px
-                );
-            pointer-events: none;
-            z-index: 0;
+            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 1) 100%), repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(99, 102, 241, 0.03) 50px, rgba(99, 102, 241, 0.03) 51px);
+            pointer-events: none; z-index: 0;
         }
         
-        /* Subtle top ribbon glow */
         body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 130px;
+            content: ''; position: fixed; top: 0; left: 0; right: 0; height: 130px;
             background: linear-gradient(180deg, rgba(37, 99, 235, 0.15) 0%, transparent 100%);
-            pointer-events: none;
-            z-index: 0;
+            pointer-events: none; z-index: 0;
         }
         
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .main-container { position: relative; z-index: 1; }
         
-        .main-container {
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* A4 Page Styling - MS Word Like */
+        /* A4 Page Styling */
         .a4-page {
             width: 210mm;
             min-height: 297mm;
@@ -133,582 +59,157 @@
             color: var(--page-text);
             padding: 5mm;
             margin: 20px auto;
-            box-shadow: 
-                0 0 0 1px rgba(0,0,0,0.08),
-                0 2px 8px rgba(0,0,0,0.08),
-                0 8px 32px rgba(0,0,0,0.12),
-                0 16px 48px rgba(0,0,0,0.15);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.12), 0 16px 48px rgba(0,0,0,0.15);
             position: relative;
             border: none;
-            border-radius: 0;
-            /* CRITICAL: Allow content to flow naturally without clipping */
             overflow: visible;
         }
         
-        /* Outer Border - Strong Black */
-        .a4-page::before {
-            content: '';
-            position: absolute;
-            top: 6mm;
-            left: 6mm;
-            right: 6mm;
-            bottom: 6mm;
-            border: 2px solid #000;
-            pointer-events: none;
-        }
-        
-        /* Inner Border - Thin Black */
-        .a4-page::after {
-            content: '';
-            position: absolute;
-            top: 7.5mm;
-            left: 7.5mm;
-            right: 7.5mm;
-            bottom: 7.5mm;
-            border: 0.8px solid #1a1a1a;
-            pointer-events: none;
-        }
+        /* Borders */
+        .a4-page::before { content: ''; position: absolute; top: 6mm; left: 6mm; right: 6mm; bottom: 6mm; border: 2px solid #000; pointer-events: none; }
+        .a4-page::after { content: ''; position: absolute; top: 7.5mm; left: 7.5mm; right: 7.5mm; bottom: 7.5mm; border: 0.8px solid #1a1a1a; pointer-events: none; }
         
         .editor-area {
             font-size: 12px;
-            line-height: 1.5;
-            min-height: calc(297mm - 30mm);
+            line-height: 1.6;
+            min-height: calc(297mm - 35mm);
             outline: none;
             color: #1a1a1a;
-            padding: 3mm 4mm 18mm 4mm;
-            margin: 9mm 8mm 15mm 8mm;
+            padding: 8mm 4mm 25mm 4mm;
+            margin: 8mm 7mm 12mm 7mm;
             overflow-wrap: break-word;
             word-wrap: break-word;
             text-align: justify;
-            /* IMPORTANT: Allow content to flow naturally - no clipping */
-            overflow: visible;
         }
         
-        /* Compact paragraph spacing */
-        .editor-area p {
-            margin-bottom: 0.3em;
-        }
-        
-        .editor-area br {
-            line-height: 1.2;
-        }
-        
-        /* Print/PDF page break styling */
-        @media print {
-            .a4-page {
-                page-break-after: always;
-                page-break-inside: avoid;
-            }
-            
-            .editor-area {
-                padding-top: 8mm !important;
-                padding-bottom: 12mm !important;
-            }
-        }
-        
-        /* Prevent line cutting at page break - COMPLETELY FIXED */
-        .editor-area p,
-        .editor-area div,
-        .editor-area span,
-        .editor-area li,
-        .editor-area h1,
-        .editor-area h2,
-        .editor-area h3,
-        .editor-area h4,
-        .editor-area h5,
-        .editor-area h6,
-        .editor-area tr,
-        .editor-area td,
-        .editor-area th,
-        .editor-area table,
-        .editor-area ul,
-        .editor-area ol {
+        /* --- ULTIMATE FIX FOR LINE CUTTING --- */
+        .editor-area p, .editor-area div, .editor-area li, .editor-area h1, .editor-area h2, .editor-area h3, .editor-area table {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
-            orphans: 4;
-            widows: 4;
+            /* Small padding bottom helps letters like g,j,y,p,q not get cut */
+            padding-bottom: 2px; 
+            margin-bottom: 5px;
         }
         
-        /* CRITICAL FIX: Proper line rendering - no half-line cutting */
-        .editor-area p,
-        .editor-area div:not(.watermark) {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            /* Ensure complete lines - no cutting */
-            line-height: 1.5;
-            margin-bottom: 0.25em;
+        .editor-area span, .editor-area a, .editor-area b, .editor-area i, .editor-area u { display: inline !important; }
+        
+        @media print {
+            .a4-page { page-break-after: always; page-break-inside: avoid; }
+            .editor-area { padding-top: 10mm !important; padding-bottom: 20mm !important; }
         }
         
-        /* Keep inline elements inline - this is critical */
-        .editor-area span,
-        .editor-area a,
-        .editor-area strong,
-        .editor-area b,
-        .editor-area em,
-        .editor-area i,
-        .editor-area u,
-        .editor-area font,
-        .editor-area sub,
-        .editor-area sup {
-            display: inline !important;
-            width: auto !important;
-        }
-        
-
-        
-        .editor-area:empty::before {
-            content: 'Paste or type your content here...';
-            color: #999;
-            font-style: italic;
-        }
+        .editor-area:empty::before { content: 'Paste or type your content here...'; color: #999; font-style: italic; }
         
         .page-number {
-            position: absolute;
-            bottom: 8mm;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 9px;
-            color: #000;
-            background: white;
-            padding: 2px 12px;
-            border-radius: 3px;
-            border: 1px solid #333;
-            font-weight: 600;
-            z-index: 10;
+            position: absolute; bottom: 8mm; left: 50%; transform: translateX(-50%);
+            font-size: 9px; color: #000; background: white; padding: 2px 12px;
+            border-radius: 3px; border: 1px solid #333; font-weight: 600; z-index: 10;
         }
         
-        /* Page naturally flows - content will extend if needed */
-        /* The key is to NOT clip - let content flow to next virtual page */
+        .watermark { position: absolute; bottom: 12mm; right: 10mm; width: 1.5in; height: 1.5in; opacity: 0.3; pointer-events: none; z-index: 1; }
+        .watermark img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* Watermark - Bottom Right Corner - Behind Text */
-        .watermark {
-            position: absolute;
-            bottom: 12mm;
-            right: 10mm;
-            width: 1.5in;
-            height: 1.5in;
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .watermark img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        
-        /* Color Picker Dropdown */
-        .color-picker-container {
-            position: relative;
-        }
-        
+        /* UI Components */
+        .color-picker-container { position: relative; }
         .color-dropdown {
-            position: absolute;
-            top: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1f2937;
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 8px;
-            display: none;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 5px;
-            z-index: 200;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
+            background: #1f2937; border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px; padding: 8px; display: none;
+            grid-template-columns: repeat(5, 1fr); gap: 5px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
+        .color-dropdown.show { display: grid; }
+        .color-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s ease; }
+        .color-btn:hover { transform: scale(1.15); border-color: white; }
         
-        .color-dropdown.show {
-            display: grid;
-        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4); }
         
-        .color-btn {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 1.5px solid transparent;
-            transition: all 0.2s ease;
-        }
-        
-        .color-btn:hover {
-            transform: scale(1.15);
-            border-color: white;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-        }
-        
-        /* MS Word Style Hamburger Menu - Compact & Smart */
         .hamburger {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 100;
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(145deg, #2563eb, #1d4ed8);
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-            transition: all 0.2s ease;
-            border: none;
+            position: fixed; top: 10px; left: 10px; z-index: 100;
+            width: 36px; height: 36px; background: linear-gradient(145deg, #2563eb, #1d4ed8);
+            border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            gap: 4px; cursor: pointer; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4); border: none;
         }
+        .hamburger span { width: 18px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
         
-        .hamburger:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
-        }
+        .export-btn { position: fixed; top: 50px; right: 15px; z-index: 100; }
+        .export-btn button { padding: 6px 12px !important; font-size: 11px !important; border-radius: 20px !important; background: linear-gradient(135deg, #10b981, #059669) !important; }
         
-        .hamburger:active {
-            transform: scale(0.95);
-        }
-        
-        .hamburger span {
-            width: 18px;
-            height: 2px;
-            background: white;
-            border-radius: 2px;
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        
-        .hamburger span:nth-child(1) {
-            width: 14px;
-        }
-        
-        .hamburger span:nth-child(3) {
-            width: 10px;
-        }
-        
-        .hamburger:hover span {
-            width: 18px;
-        }
-        
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(4px, 4px);
-            width: 18px;
-        }
-        
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-        
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(4px, -4px);
-            width: 18px;
-        }
-        
-        /* Export Button - Smart & Stylish */
-        .export-btn {
-            position: fixed;
-            top: 50px;
-            right: 15px;
-            z-index: 100;
-        }
-        
-        .export-btn button {
-            padding: 6px 12px !important;
-            font-size: 11px !important;
-            border-radius: 20px !important;
-            background: linear-gradient(135deg, #10b981, #059669) !important;
-            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .export-btn button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
-        }
-        
-        .export-btn svg {
-            width: 14px !important;
-            height: 14px !important;
-        }
-        
-        /* MS Word Style Toolbar - Two Lines Compact */
         .toolbar {
-            position: fixed;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 90;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 2px;
-            padding: 5px 8px;
-            border-radius: 8px;
-            background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-            max-width: 320px;
+            position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 90;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; padding: 5px 8px;
+            border-radius: 8px; background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1); max-width: 320px;
         }
+        .toolbar button { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; }
+        .toolbar button:hover { background: rgba(255,255,255,0.15); }
+        .toolbar-divider { width: 1px; height: 18px; background: rgba(255, 255, 255, 0.15); margin: 4px 3px; }
         
-        .toolbar button {
-            width: 26px;
-            height: 26px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s ease;
-            background: transparent;
-            border: none;
-        }
+        .theme-card { cursor: pointer; transition: all 0.3s ease; }
+        .theme-card:hover { transform: scale(1.05); }
         
-        .toolbar button svg {
-            width: 13px;
-            height: 13px;
-        }
-        
-        .toolbar button:hover {
-            background: rgba(255,255,255,0.15);
-        }
-        
-        .toolbar button:active {
-            background: rgba(255,255,255,0.25);
-        }
-        
-        .toolbar-divider {
-            width: 1px;
-            height: 18px;
-            background: rgba(255, 255, 255, 0.15);
-            margin: 4px 3px;
-        }
-        
-        .slide-in {
-            animation: slideIn 0.3s ease forwards;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.4s ease forwards;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--surface);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        
-        .theme-card {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .theme-card:hover {
-            transform: scale(1.05);
-        }
-        
-        .theme-card.active {
-            ring: 3px solid var(--accent);
-        }
-
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-        }
-        
-        input[type="range"] {
-            -webkit-appearance: none;
-            height: 6px;
-            background: var(--surface);
-            border-radius: 5px;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--primary);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        /* MS Word Style Status Bar */
         .status-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 8px 20px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            z-index: 50;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 20px;
+            display: flex; justify-content: space-between; font-size: 11px; z-index: 50;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         @media print, screen and (max-width: 800px) {
-            .a4-page {
-                width: 100%;
-                min-height: auto;
-                padding: 15mm;
-                margin: 10px;
-            }
+            .a4-page { width: 100%; min-height: auto; padding: 15mm; margin: 10px; }
         }
-
-        /* PDF Styles */
-        .pdf-content {
-            font-family: 'Times New Roman', serif;
-        }
+        
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
     </style>
 </head>
 <body class="theme-default">
-    <!-- Hamburger Menu Button -->
-    <div class="hamburger" id="hamburgerBtn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+    <!-- Menu & Buttons -->
+    <div class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></div>
 
-    <!-- Export PDF Button -->
     <div class="export-btn">
         <button id="exportBtn" class="btn-primary px-5 py-3 rounded-2xl text-white font-medium flex items-center gap-2 shadow-lg">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
             Export PDF
         </button>
     </div>
 
     <!-- Floating Toolbar -->
     <div class="toolbar glass">
-        <button onclick="formatText('bold')" title="Bold (Ctrl+B)">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/>
-            </svg>
-        </button>
-        <button onclick="formatText('italic')" title="Italic (Ctrl+I)">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"/>
-            </svg>
-        </button>
-        <button onclick="formatText('underline')" title="Underline (Ctrl+U)">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 21h14"/>
-            </svg>
-        </button>
+        <button onclick="formatText('bold')" title="Bold"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg></button>
+        <button onclick="formatText('italic')" title="Italic"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"/></svg></button>
+        <button onclick="formatText('underline')" title="Underline"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 21h14"/></svg></button>
         <div class="toolbar-divider"></div>
-        <!-- Font Size Increase/Decrease -->
-        <button onclick="changeSelectedFontSize(-1)" title="Decrease Font Size" class="text-blue-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/>
-            </svg>
-        </button>
+        <button onclick="changeSelectedFontSize(-1)" class="text-blue-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg></button>
         <span class="text-xs px-1 text-white/70">A</span>
-        <button onclick="changeSelectedFontSize(1)" title="Increase Font Size" class="text-green-400">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-        </button>
+        <button onclick="changeSelectedFontSize(1)" class="text-green-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
         <div class="toolbar-divider"></div>
-        <!-- Color Picker -->
         <div class="color-picker-container">
-            <button onmousedown="saveSelection()" onclick="toggleColorPicker()" title="Text Color" class="text-yellow-400" id="colorPickerBtn">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                    <circle cx="12" cy="12" r="5" fill="currentColor"/>
-                </svg>
+            <button onmousedown="saveSelection()" onclick="toggleColorPicker()" class="text-yellow-400" id="colorPickerBtn">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
             </button>
             <div class="color-dropdown" id="colorDropdown">
-                <!-- 20 Colors -->
-                <div class="color-btn" style="background:#000000" onclick="applyColor('#000000')" title="Black"></div>
-                <div class="color-btn" style="background:#ffffff; border:1px solid #ccc" onclick="applyColor('#ffffff')" title="White"></div>
-                <div class="color-btn" style="background:#ef4444" onclick="applyColor('#ef4444')" title="Red"></div>
-                <div class="color-btn" style="background:#f97316" onclick="applyColor('#f97316')" title="Orange"></div>
-                <div class="color-btn" style="background:#eab308" onclick="applyColor('#eab308')" title="Yellow"></div>
-                <div class="color-btn" style="background:#22c55e" onclick="applyColor('#22c55e')" title="Green"></div>
-                <div class="color-btn" style="background:#14b8a6" onclick="applyColor('#14b8a6')" title="Teal"></div>
-                <div class="color-btn" style="background:#3b82f6" onclick="applyColor('#3b82f6')" title="Blue"></div>
-                <div class="color-btn" style="background:#6366f1" onclick="applyColor('#6366f1')" title="Indigo"></div>
-                <div class="color-btn" style="background:#8b5cf6" onclick="applyColor('#8b5cf6')" title="Purple"></div>
-                <div class="color-btn" style="background:#ec4899" onclick="applyColor('#ec4899')" title="Pink"></div>
-                <div class="color-btn" style="background:#f43f5e" onclick="applyColor('#f43f5e')" title="Rose"></div>
-                <div class="color-btn" style="background:#64748b" onclick="applyColor('#64748b')" title="Gray"></div>
-                <div class="color-btn" style="background:#78350f" onclick="applyColor('#78350f')" title="Brown"></div>
-                <div class="color-btn" style="background:#065f46" onclick="applyColor('#065f46')" title="Dark Green"></div>
-                <div class="color-btn" style="background:#1e3a8a" onclick="applyColor('#1e3a8a')" title="Dark Blue"></div>
-                <div class="color-btn" style="background:#581c87" onclick="applyColor('#581c87')" title="Dark Purple"></div>
-                <div class="color-btn" style="background:#9f1239" onclick="applyColor('#9f1239')" title="Dark Red"></div>
-                <div class="color-btn" style="background:#0891b2" onclick="applyColor('#0891b2')" title="Cyan"></div>
-                <div class="color-btn" style="background:#84cc16" onclick="applyColor('#84cc16')" title="Lime"></div>
+                <div class="color-btn" style="background:#000000" onclick="applyColor('#000000')"></div>
+                <div class="color-btn" style="background:#ffffff; border:1px solid #ccc" onclick="applyColor('#ffffff')"></div>
+                <div class="color-btn" style="background:#ef4444" onclick="applyColor('#ef4444')"></div>
+                <div class="color-btn" style="background:#22c55e" onclick="applyColor('#22c55e')"></div>
+                <div class="color-btn" style="background:#3b82f6" onclick="applyColor('#3b82f6')"></div>
+                <div class="color-btn" style="background:#8b5cf6" onclick="applyColor('#8b5cf6')"></div>
+                <div class="color-btn" style="background:#f97316" onclick="applyColor('#f97316')"></div>
+                <div class="color-btn" style="background:#eab308" onclick="applyColor('#eab308')"></div>
+                <div class="color-btn" style="background:#ec4899" onclick="applyColor('#ec4899')"></div>
+                <div class="color-btn" style="background:#64748b" onclick="applyColor('#64748b')"></div>
             </div>
         </div>
         <div class="toolbar-divider"></div>
-        <!-- Text Alignment -->
-        <button onclick="alignText('justifyLeft')" title="Align Left" class="text-white/80">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/>
-            </svg>
-        </button>
-        <button onclick="alignText('justifyCenter')" title="Align Center" class="text-white/80">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/>
-            </svg>
-        </button>
-        <button onclick="alignText('justifyRight')" title="Align Right" class="text-white/80">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/>
-            </svg>
-        </button>
-        <button onclick="alignText('justifyFull')" title="Justify" class="text-white/80">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-        </button>
+        <button onclick="alignText('justifyLeft')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/></svg></button>
+        <button onclick="alignText('justifyCenter')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/></svg></button>
+        <button onclick="alignText('justifyRight')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/></svg></button>
+        <button onclick="alignText('justifyFull')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
         <div class="toolbar-divider"></div>
-        <button onclick="clearEditor()" class="hover:!bg-red-500/30 text-red-400" title="Clear All">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-            </svg>
-        </button>
+        <button onclick="clearEditor()" class="hover:!bg-red-500/30 text-red-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
     </div>
 
     <!-- Main Content - A4 Page -->
@@ -716,109 +217,45 @@
         <div class="a4-page" id="pageContainer">
             <div id="editor" contenteditable="true" class="editor-area"></div>
             <div class="page-number">Page <span id="currentPage">1</span></div>
-            <!-- Watermark - Bottom Right Corner -->
-            <div class="watermark">
-                <img src="watermark.png" alt="" onerror="this.parentElement.style.display='none'">
-            </div>
+            <div class="watermark"><img src="watermark.png" alt="" onerror="this.parentElement.style.display='none'"></div>
         </div>
     </main>
 
     <!-- Status Bar -->
     <div class="status-bar glass">
         <span id="wordCount">Words: 0 | Characters: 0</span>
-        <span id="lastSaved" class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500 pulse"></span>
-            Auto-saved
-        </span>
+        <span id="lastSaved" class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 pulse"></span> Auto-saved</span>
     </div>
 
     <!-- Side Menu Panel -->
     <div id="sideMenu" class="fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 backdrop-blur-xl z-50 transform -translate-x-full transition-transform duration-300 shadow-2xl border-r border-white/5">
         <div class="p-5 h-full overflow-y-auto">
-            <!-- Logo Header - Smart & Compact -->
             <div class="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </div>
-                <div>
-                    <h1 class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">NabiulWord</h1>
-                    <p class="text-[10px] text-gray-500">Smart Notepad v1.0</p>
-                </div>
+                <div><h1 class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">NabiulWord</h1><p class="text-[10px] text-gray-500">Smart Notepad v1.0</p></div>
             </div>
-
-            <!-- Menu Items - Smart Grid -->
             <nav class="space-y-1 mb-6">
                 <button onclick="newDocument()" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
-                    <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30">
-                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                        </svg>
-                    </div>
-                    <span class="text-sm">New Document</span>
+                    <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30"><svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></div><span class="text-sm">New Document</span>
                 </button>
                 <button onclick="document.getElementById('exportBtn').click(); closeSideMenu();" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30">
-                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                    </div>
-                    <span class="text-sm">Export as PDF</span>
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30"><svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><span class="text-sm">Export as PDF</span>
                 </button>
             </nav>
-
             <div class="border-t border-white/10 pt-4">
-                <!-- Font Size - Compact -->
                 <div class="mb-4 p-2 rounded-lg hover:bg-white/5 transition-all">
-                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2">
-                        <div class="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center">
-                            <span class="text-cyan-400 text-[10px] font-bold">Aa</span>
-                        </div>
-                        Font Size
-                        <span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="fontSizeValue">12px</span>
-                    </h3>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] text-gray-500">A</span>
-                        <input type="range" id="fontSizeSlider" min="10" max="24" value="12" class="flex-grow h-1">
-                        <span class="text-sm font-bold text-gray-400">A</span>
-                    </div>
+                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2"><div class="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center"><span class="text-cyan-400 text-[10px] font-bold">Aa</span></div>Font Size<span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="fontSizeValue">12px</span></h3>
+                    <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">A</span><input type="range" id="fontSizeSlider" min="10" max="24" value="12" class="flex-grow h-1"><span class="text-sm font-bold text-gray-400">A</span></div>
                 </div>
-
-                <!-- Brightness - Compact -->
                 <div class="mb-4 p-2 rounded-lg hover:bg-white/5 transition-all">
-                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2">
-                        <div class="w-6 h-6 rounded bg-yellow-500/20 flex items-center justify-center">
-                            <svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                            </svg>
-                        </div>
-                        Brightness
-                        <span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="brightnessValue">100%</span>
-                    </h3>
-                    <div class="flex items-center gap-2">
-                        <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                        </svg>
-                        <input type="range" id="brightnessSlider" min="50" max="150" value="100" class="flex-grow h-1">
-                        <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 7a5 5 0 100 10 5 5 0 000-10z"/>
-                        </svg>
-                    </div>
+                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2"><div class="w-6 h-6 rounded bg-yellow-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>Brightness<span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="brightnessValue">100%</span></h3>
+                    <div class="flex items-center gap-2"><svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><input type="range" id="brightnessSlider" min="50" max="150" value="100" class="flex-grow h-1"><svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10z"/></svg></div>
                 </div>
-
-                <!-- Themes - Smart -->
                 <div class="mb-4">
                     <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-all" onclick="toggleThemes()">
-                        <div class="w-6 h-6 rounded bg-pink-500/20 flex items-center justify-center">
-                            <svg class="w-3.5 h-3.5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
-                            </svg>
-                        </div>
-                        <span>Themes</span>
-                        <svg id="themeArrow" class="w-3 h-3 ml-auto transition-transform duration-300 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                        <div class="w-6 h-6 rounded bg-pink-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg></div>Themes<svg id="themeArrow" class="w-3 h-3 ml-auto transition-transform duration-300 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </h3>
                     <div id="themesContainer" class="hidden grid grid-cols-5 gap-2 mt-2 px-2">
                         <div class="theme-card w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md cursor-pointer hover:scale-110 transition-transform" onclick="setTheme('default')" title="Default"></div>
@@ -828,19 +265,9 @@
                         <div class="theme-card w-9 h-9 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 shadow-md cursor-pointer hover:scale-110 transition-transform" onclick="setTheme('rose')" title="Rose"></div>
                     </div>
                 </div>
-
-                <!-- About Developer -->
                 <div>
                     <h3 class="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-all" onclick="toggleAbout()">
-                        <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                        </div>
-                        <span>About Developer</span>
-                        <svg id="aboutArrow" class="w-4 h-4 ml-auto transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                        <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center"><svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>About Developer<svg id="aboutArrow" class="w-4 h-4 ml-auto transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                     </h3>
                     <div id="aboutContainer" class="hidden">
                         <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-4 text-center border border-white/5">
@@ -850,44 +277,6 @@
                             </div>
                             <h4 class="font-bold text-base mb-0.5 text-white">Nabiul Hasan</h4>
                             <p class="text-[10px] text-indigo-400 mb-3 font-medium">Developer & Designer</p>
-                            <div class="text-left text-[11px] space-y-2 max-h-52 overflow-y-auto pr-1">
-                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-indigo-500">
-                                    <h5 class="font-semibold text-indigo-400 mb-1.5 text-xs">📚 Academic Qualification</h5>
-                                    <ul class="space-y-0.5 text-gray-300">
-                                        <li>• B.A in Arabic</li>
-                                        <li>• M.A in Arabic</li>
-                                        <li>• B.A in English</li>
-                                        <li>• M.A in English</li>
-                                        <li>• B.Ed</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-green-500">
-                                    <h5 class="font-semibold text-green-400 mb-1.5 text-xs">💊 Other Qualification</h5>
-                                    <p class="text-gray-300">Diploma in Pharmacy</p>
-                                </div>
-                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-amber-500">
-                                    <h5 class="font-semibold text-amber-400 mb-1.5 text-xs">☪️ Islamic Qualification</h5>
-                                    <ul class="space-y-0.5 text-gray-300">
-                                        <li>• Hafiz E Quran</li>
-                                        <li>• Maulana (Alim)</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-rose-500">
-                                    <h5 class="font-semibold text-rose-400 mb-1.5 text-xs">🎓 Additional Qualification</h5>
-                                    <ol class="space-y-0.5 text-gray-300 list-decimal list-inside">
-                                        <li>Certificate in Desktop Publishing</li>
-                                        <li>Diploma In ICT</li>
-                                        <li>Certificate in Client Server Technology</li>
-                                        <li>Diploma in Financial Accounting</li>
-                                        <li>Certificate in Web Designing</li>
-                                        <li>Diploma in Multimedia & Animation</li>
-                                        <li>Diploma in TALLY ERP9</li>
-                                        <li>Advance Diploma in AutoCAD</li>
-                                        <li>Advance Diploma in Software App</li>
-                                        <li>Advance Diploma in Computer Training</li>
-                                    </ol>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -895,16 +284,12 @@
         </div>
     </div>
 
-    <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black/60 z-40 hidden"></div>
-
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 opacity-0 transition-all duration-300 translate-y-10">
         <span id="toastMessage">Saved successfully!</span>
     </div>
 
     <script>
-        // DOM Elements
         const editor = document.getElementById('editor');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
@@ -912,441 +297,146 @@
         const fontSizeSlider = document.getElementById('fontSizeSlider');
         const brightnessSlider = document.getElementById('brightnessSlider');
         const exportBtn = document.getElementById('exportBtn');
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSavedContent();
-            updateWordCount();
-            loadSettings();
-        });
-        
-        // Allow paste with formatting
-        editor.addEventListener('paste', (e) => {
-            // Allow default paste behavior to preserve formatting
-        });
-        
-        // Auto-save
         let saveTimeout;
+        let savedSelection = null;
+
+        document.addEventListener('DOMContentLoaded', () => { loadSavedContent(); updateWordCount(); loadSettings(); });
+        editor.addEventListener('paste', (e) => {});
         editor.addEventListener('input', () => {
-            updateWordCount();
-            updatePageCount();
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                localStorage.setItem('nabiulword_content', editor.innerHTML);
-                showToast('Auto-saved!');
-            }, 2000);
+            updateWordCount(); updatePageCount(); clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => { localStorage.setItem('nabiulword_content', editor.innerHTML); showToast('Auto-saved!'); }, 2000);
         });
+
+        function loadSavedContent() { const saved = localStorage.getItem('nabiulword_content'); if (saved) editor.innerHTML = saved; updatePageCount(); }
+        function updateWordCount() { const text = editor.innerText || ''; const words = text.trim() ? text.trim().split(/\s+/).length : 0; document.getElementById('wordCount').textContent = `Words: ${words} | Characters: ${text.length}`; }
+        function updatePageCount() { const pages = Math.max(1, Math.ceil(editor.scrollHeight / (257 * 3.78))); document.getElementById('currentPage').textContent = pages; }
+        function formatText(command) { document.execCommand(command, false, null); editor.focus(); }
         
-        // Load saved content
-        function loadSavedContent() {
-            const saved = localStorage.getItem('nabiulword_content');
-            if (saved) editor.innerHTML = saved;
-            updatePageCount();
-        }
-        
-        // Word count
-        function updateWordCount() {
-            const text = editor.innerText || '';
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            const chars = text.length;
-            document.getElementById('wordCount').textContent = `Words: ${words} | Characters: ${chars}`;
-        }
-        
-        // Update page count based on content height
-        function updatePageCount() {
-            const contentHeight = editor.scrollHeight;
-            const pageHeight = 257 * 3.78; // 257mm in pixels (A4 - margins)
-            const pages = Math.max(1, Math.ceil(contentHeight / pageHeight));
-            document.getElementById('currentPage').textContent = pages;
-        }
-        
-        // Format commands
-        function formatText(command) {
-            document.execCommand(command, false, null);
-            editor.focus();
-        }
-        
-        // Change selected text font size
         function changeSelectedFontSize(delta) {
             const selection = window.getSelection();
-            if (!selection.rangeCount || selection.isCollapsed) {
-                showToast('Please select some text first!');
-                return;
-            }
-            
+            if (!selection.rangeCount || selection.isCollapsed) { showToast('Please select some text first!'); return; }
             const range = selection.getRangeAt(0);
-            const selectedText = range.toString();
-            
-            if (!selectedText.trim()) {
-                showToast('Please select some text first!');
-                return;
-            }
-            
-            // Create a span with new font size
-            const span = document.createElement('span');
-            
-            // Get current font size
-            const computedStyle = window.getComputedStyle(range.startContainer.parentElement);
-            let currentSize = parseInt(computedStyle.fontSize) || 12;
-            
-            // Increment by 4px for faster scaling, max 72px
-            let newSize = currentSize + (delta * 4);
-            
-            // Limit font size range (min 8, max 72)
-            newSize = Math.max(8, Math.min(72, newSize));
-            
-            span.style.fontSize = newSize + 'px';
-            
-            try {
-                range.surroundContents(span);
-                showToast(`Font size: ${newSize}px`);
-            } catch(e) {
-                // If surroundContents fails, use execCommand
-                document.execCommand('fontSize', false, '7');
-                const fontElements = editor.querySelectorAll('font[size="7"]');
-                fontElements.forEach(el => {
-                    el.removeAttribute('size');
-                    el.style.fontSize = newSize + 'px';
-                });
-                showToast(`Font size: ${newSize}px`);
-            }
-            
-            editor.focus();
+            let currentSize = parseInt(window.getComputedStyle(range.startContainer.parentElement).fontSize) || 12;
+            let newSize = Math.max(8, Math.min(72, currentSize + (delta * 4)));
+            document.execCommand('fontSize', false, '7');
+            editor.querySelectorAll('font[size="7"]').forEach(el => { el.removeAttribute('size'); el.style.fontSize = newSize + 'px'; });
+            showToast(`Font size: ${newSize}px`); editor.focus();
         }
-        
-        // New document
-        function newDocument() {
-            if (confirm('Create a new document? Current content will be cleared.')) {
-                editor.innerHTML = '';
-                localStorage.removeItem('nabiulword_content');
-                showToast('New document created!');
-                updateWordCount();
-                closeSideMenu();
-            }
-        }
-        
-        // Clear editor
-        function clearEditor() {
-            if (confirm('Are you sure you want to clear all content?')) {
-                editor.innerHTML = '';
-                localStorage.removeItem('nabiulword_content');
-                showToast('Content cleared!');
-                updateWordCount();
-            }
-        }
-        
-        // Export PDF with page numbers
+
+        function newDocument() { if (confirm('Create new doc?')) { editor.innerHTML = ''; localStorage.removeItem('nabiulword_content'); showToast('New document created!'); updateWordCount(); closeSideMenu(); } }
+        function clearEditor() { if (confirm('Clear all?')) { editor.innerHTML = ''; localStorage.removeItem('nabiulword_content'); showToast('Cleared!'); updateWordCount(); } }
+
+        // --- ULTIMATE FIX PDF EXPORT ---
         exportBtn.addEventListener('click', async () => {
             const content = editor.innerHTML;
-            if (!content.trim()) {
-                showToast('Please add some content first!');
-                return;
-            }
-            
-            // Create PDF container with proper formatting for each page
+            if (!content.trim()) { showToast('Please add content!'); return; }
+
             const pdfContainer = document.createElement('div');
-            pdfContainer.style.cssText = 'font-family: Times New Roman, serif; color: #1a1a1a; background: white; padding: 8mm 7mm 12mm 7mm; font-size: 12px; line-height: 1.4; text-align: justify;';
+            pdfContainer.style.cssText = 'width: 200mm; font-family: Times New Roman, serif; color: #1a1a1a; background: white; font-size: 12px; line-height: 1.6; text-align: justify;';
             
-            // Add CSS for consistent page formatting - COMPLETELY FIXED LINE CUTTING
             const style = document.createElement('style');
             style.textContent = `
-                * {
-                    box-sizing: border-box;
-                }
-                /* Prevent any element from breaking across pages */
-                p, div, li, h1, h2, h3, h4, h5, h6, tr, td, table, ul, ol {
+                /* HARDCORE FIX FOR LINE CUTTING */
+                p, div, li, h1, h2, h3, h4, h5, h6, tr, td, table {
                     page-break-inside: avoid !important;
                     break-inside: avoid !important;
-                    orphans: 5 !important;
-                    widows: 5 !important;
+                    display: block; 
+                    margin-bottom: 5px;
+                    padding-bottom: 2px; /* Safety buffer for letters like g, y, j */
                 }
-                p { 
-                    margin-bottom: 0.4em !important; 
-                    margin-top: 0 !important;
-                    padding-bottom: 3px !important;
-                    line-height: 1.6 !important;
-                }
-                br {
-                    line-height: 1.4 !important;
-                    display: block;
-                    content: "";
-                    margin-top: 0.25em;
-                }
-                /* Ensure proper line height so text doesn't get cut */
-                body, html {
-                    margin: 0;
-                    padding: 0;
-                    line-height: 1.6 !important;
-                }
-                /* Buffer at bottom to prevent half-line */
-                div, p {
-                    padding-bottom: 2px !important;
-                }
-                /* Inline elements stay inline */
-                span, a, strong, b, em, i, u, font {
-                    display: inline !important;
-                }
+                span, a, strong, b, i, u { display: inline !important; }
+                img { max-width: 100%; height: auto; page-break-inside: avoid; }
             `;
             pdfContainer.appendChild(style);
-            
+
             const contentDiv = document.createElement('div');
             contentDiv.innerHTML = content;
             pdfContainer.appendChild(contentDiv);
-            
+
             const opt = {
-                margin: [10, 8, 15, 8],
+                // Increased bottom margin to 20mm to act as a safety buffer
+                margin: [10, 10, 20, 10], 
                 filename: 'NabiulWord_Document.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                // Use 'avoid-all' mode which forces element move if it doesn't fit
                 pagebreak: { 
                     mode: ['avoid-all', 'css', 'legacy'],
-                    before: '.page-break-before',
-                    after: '.page-break-after',
-                    avoid: ['p', 'div', 'span', 'li', 'tr', 'td', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'ul', 'ol']
                 }
             };
-            
+
             showToast('Generating PDF...');
-            
             try {
                 const pdf = await html2pdf().set(opt).from(pdfContainer).toPdf().get('pdf');
-                
-                // Add page numbers and border to each page
                 const totalPages = pdf.internal.getNumberOfPages();
                 for (let i = 1; i <= totalPages; i++) {
                     pdf.setPage(i);
-                    
-                    // Add outer border - Black stylish
-                    pdf.setDrawColor(0, 0, 0);
-                    pdf.setLineWidth(0.8);
-                    pdf.rect(5, 5, 200, 287);
-                    
-                    // Add inner border - Dark gray
-                    pdf.setDrawColor(51, 51, 51);
-                    pdf.setLineWidth(0.3);
-                    pdf.rect(6.5, 6.5, 197, 284);
-                    
-                    // Add page number inside border
-                    pdf.setFontSize(9);
-                    pdf.setTextColor(0);
+                    // Borders
+                    pdf.setDrawColor(0, 0, 0); pdf.setLineWidth(0.8); pdf.rect(5, 5, 200, 287);
+                    pdf.setDrawColor(51, 51, 51); pdf.setLineWidth(0.3); pdf.rect(6.5, 6.5, 197, 284);
+                    // Page Number
+                    pdf.setFontSize(9); pdf.setTextColor(0);
                     pdf.text(`Page ${i} of ${totalPages}`, 105, 289, { align: 'center' });
-                    
-                    // Add watermark if exists (bottom right corner, 1.5 inch = ~38mm, opacity 30%)
+                    // Watermark
                     try {
-                        const watermarkImg = document.querySelector('.watermark img');
-                        if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
+                        const wImg = document.querySelector('.watermark img');
+                        if (wImg && wImg.src && !wImg.src.includes('data:')) {
                             pdf.setGState(new pdf.GState({opacity: 0.3}));
-                            pdf.addImage(watermarkImg.src, 'PNG', 162, 247, 38, 38, '', 'FAST', 0);
+                            pdf.addImage(wImg.src, 'PNG', 162, 247, 38, 38, '', 'FAST', 0);
                             pdf.setGState(new pdf.GState({opacity: 1}));
                         }
-                    } catch(err) {
-                        // Watermark not available
-                    }
+                    } catch(e) {}
                 }
-                
                 pdf.save('NabiulWord_Document.pdf');
-                showToast('PDF exported successfully!');
-            } catch (e) {
-                showToast('Error generating PDF!');
-                console.error(e);
-            }
+                showToast('Exported!');
+            } catch (e) { showToast('Error!'); console.error(e); }
         });
-        
-        // Side Menu Toggle
+
         hamburgerBtn.addEventListener('click', () => {
             hamburgerBtn.classList.toggle('active');
-            if (sideMenu.classList.contains('-translate-x-full')) {
-                sideMenu.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                closeSideMenu();
-            }
+            if (sideMenu.classList.contains('-translate-x-full')) { sideMenu.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); }
+            else closeSideMenu();
         });
-        
-        function closeSideMenu() {
-            sideMenu.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-            hamburgerBtn.classList.remove('active');
-        }
-        
+        function closeSideMenu() { sideMenu.classList.add('-translate-x-full'); overlay.classList.add('hidden'); hamburgerBtn.classList.remove('active'); }
         overlay.addEventListener('click', closeSideMenu);
         
-        // Font Size
-        fontSizeSlider.addEventListener('input', (e) => {
-            const size = e.target.value;
-            editor.style.fontSize = size + 'px';
-            document.getElementById('fontSizeValue').textContent = size + 'px';
-            localStorage.setItem('nabiulword_fontSize', size);
-        });
+        fontSizeSlider.addEventListener('input', (e) => { editor.style.fontSize = e.target.value + 'px'; document.getElementById('fontSizeValue').textContent = e.target.value + 'px'; localStorage.setItem('nabiulword_fontSize', e.target.value); });
+        brightnessSlider.addEventListener('input', (e) => { document.documentElement.style.setProperty('--brightness', e.target.value / 100); document.getElementById('brightnessValue').textContent = e.target.value + '%'; localStorage.setItem('nabiulword_brightness', e.target.value); });
         
-        // Brightness
-        brightnessSlider.addEventListener('input', (e) => {
-            const brightness = e.target.value;
-            document.documentElement.style.setProperty('--brightness', brightness / 100);
-            document.getElementById('brightnessValue').textContent = brightness + '%';
-            localStorage.setItem('nabiulword_brightness', brightness);
-        });
+        function toggleThemes() { document.getElementById('themesContainer').classList.toggle('hidden'); document.getElementById('themeArrow').style.transform = document.getElementById('themesContainer').classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)'; }
+        function setTheme(theme) { document.body.className = theme === 'default' ? '' : `theme-${theme}`; localStorage.setItem('nabiulword_theme', theme); showToast('Theme applied!'); }
+        function toggleAbout() { document.getElementById('aboutContainer').classList.toggle('hidden'); document.getElementById('aboutArrow').style.transform = document.getElementById('aboutContainer').classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)'; }
         
-        // Themes
-        function toggleThemes() {
-            const container = document.getElementById('themesContainer');
-            const arrow = document.getElementById('themeArrow');
-            container.classList.toggle('hidden');
-            arrow.style.transform = container.classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)';
-        }
-        
-        function setTheme(theme) {
-            document.body.className = theme === 'default' ? '' : `theme-${theme}`;
-            localStorage.setItem('nabiulword_theme', theme);
-            showToast(`${theme.charAt(0).toUpperCase() + theme.slice(1)} theme applied!`);
-        }
-        
-        // About
-        function toggleAbout() {
-            const container = document.getElementById('aboutContainer');
-            const arrow = document.getElementById('aboutArrow');
-            container.classList.toggle('hidden');
-            arrow.style.transform = container.classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)';
-        }
-        
-        // Load Settings
         function loadSettings() {
-            const fontSize = localStorage.getItem('nabiulword_fontSize') || 12;
-            const brightness = localStorage.getItem('nabiulword_brightness') || 100;
-            const theme = localStorage.getItem('nabiulword_theme') || 'default';
-            
-            fontSizeSlider.value = fontSize;
-            editor.style.fontSize = fontSize + 'px';
-            document.getElementById('fontSizeValue').textContent = fontSize + 'px';
-            
-            brightnessSlider.value = brightness;
-            document.documentElement.style.setProperty('--brightness', brightness / 100);
-            document.getElementById('brightnessValue').textContent = brightness + '%';
-            
-            if (theme !== 'default') {
-                document.body.className = `theme-${theme}`;
-            }
+            const fs = localStorage.getItem('nabiulword_fontSize') || 12;
+            const br = localStorage.getItem('nabiulword_brightness') || 100;
+            const th = localStorage.getItem('nabiulword_theme') || 'default';
+            fontSizeSlider.value = fs; editor.style.fontSize = fs + 'px'; document.getElementById('fontSizeValue').textContent = fs + 'px';
+            brightnessSlider.value = br; document.documentElement.style.setProperty('--brightness', br / 100); document.getElementById('brightnessValue').textContent = br + '%';
+            if (th !== 'default') document.body.className = `theme-${th}`;
         }
         
-        // Toast
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toastMessage').textContent = message;
-            toast.classList.remove('opacity-0', 'translate-y-10');
-            toast.classList.add('opacity-100', 'translate-y-0');
-            
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-10');
-                toast.classList.remove('opacity-100', 'translate-y-0');
-            }, 3000);
+        function showToast(msg) {
+            const t = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg;
+            t.classList.remove('opacity-0', 'translate-y-10'); t.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { t.classList.add('opacity-0', 'translate-y-10'); t.classList.remove('opacity-100', 'translate-y-0'); }, 3000);
         }
         
-        // Store selection for color picker
-        let savedSelection = null;
-        
-        // Save selection before opening color picker
-        function saveSelection() {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                savedSelection = selection.getRangeAt(0).cloneRange();
-            }
-        }
-        
-        // Restore saved selection
-        function restoreSelection() {
-            if (savedSelection) {
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(savedSelection);
-            }
-        }
-        
-        // Color Picker Toggle - Save selection first
-        function toggleColorPicker() {
-            saveSelection();
-            const dropdown = document.getElementById('colorDropdown');
-            dropdown.classList.toggle('show');
-        }
-        
-        // Apply color to selected text - COMPLETELY FIXED VERSION
+        function saveSelection() { const sel = window.getSelection(); if (sel.rangeCount > 0) savedSelection = sel.getRangeAt(0).cloneRange(); }
+        function restoreSelection() { if (savedSelection) { const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(savedSelection); } }
+        function toggleColorPicker() { saveSelection(); document.getElementById('colorDropdown').classList.toggle('show'); }
         function applyColor(color) {
-            // Restore saved selection first
             restoreSelection();
-            
-            // Small delay to ensure selection is restored
             setTimeout(() => {
-                const selection = window.getSelection();
-                if (!savedSelection || selection.isCollapsed) {
-                    showToast('Please select some text first!');
-                    document.getElementById('colorDropdown').classList.remove('show');
-                    return;
-                }
-                
-                // Use execCommand for reliable color change
-                document.execCommand('styleWithCSS', false, true);
-                const result = document.execCommand('foreColor', false, color);
-                
-                if (result) {
-                    showToast('Color applied!');
-                } else {
-                    showToast('Color change failed!');
-                }
-                
-                document.getElementById('colorDropdown').classList.remove('show');
-                savedSelection = null;
-                editor.focus();
+                const sel = window.getSelection();
+                if (!savedSelection || sel.isCollapsed) { showToast('Select text first!'); document.getElementById('colorDropdown').classList.remove('show'); return; }
+                document.execCommand('styleWithCSS', false, true); document.execCommand('foreColor', false, color);
+                document.getElementById('colorDropdown').classList.remove('show'); savedSelection = null; editor.focus();
             }, 10);
         }
-        
-        // Text Alignment Function
-        function alignText(alignment) {
-            editor.focus();
-            document.execCommand(alignment, false, null);
-            
-            const alignNames = {
-                'justifyLeft': 'Left',
-                'justifyCenter': 'Center',
-                'justifyRight': 'Right',
-                'justifyFull': 'Justify'
-            };
-            
-            showToast(`Aligned: ${alignNames[alignment]}`);
-        }
-        
-        // Close color picker when clicking outside
-        document.addEventListener('click', (e) => {
-            const dropdown = document.getElementById('colorDropdown');
-            const btn = document.getElementById('colorPickerBtn');
-            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey || e.metaKey) {
-                switch(e.key.toLowerCase()) {
-                    case 's':
-                        e.preventDefault();
-                        localStorage.setItem('nabiulword_content', editor.innerHTML);
-                        showToast('Saved!');
-                        break;
-                    case 'b':
-                        e.preventDefault();
-                        formatText('bold');
-                        break;
-                    case 'i':
-                        e.preventDefault();
-                        formatText('italic');
-                        break;
-                    case 'u':
-                        e.preventDefault();
-                        formatText('underline');
-                        break;
-                }
-            }
-        });
+        function alignText(a) { editor.focus(); document.execCommand(a, false, null); }
+        document.addEventListener('click', (e) => { if (!document.getElementById('colorDropdown').contains(e.target) && !document.getElementById('colorPickerBtn').contains(e.target)) document.getElementById('colorDropdown').classList.remove('show'); });
     </script>
 </body>
 </html>
