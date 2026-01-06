@@ -257,16 +257,16 @@
             z-index: 10;
         }
         
-        /* Watermark - Bottom Right Corner */
+        /* Watermark - Bottom Right Corner - Behind Text */
         .watermark {
             position: absolute;
             bottom: 12mm;
             right: 10mm;
             width: 1.5in;
             height: 1.5in;
-            opacity: 0.4;
+            opacity: 0.3;
             pointer-events: none;
-            z-index: 5;
+            z-index: 1;
         }
         
         .watermark img {
@@ -282,18 +282,18 @@
         
         .color-dropdown {
             position: absolute;
-            top: 45px;
+            top: 35px;
             left: 50%;
             transform: translateX(-50%);
             background: #1f2937;
             border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px;
-            padding: 10px;
+            border-radius: 8px;
+            padding: 8px;
             display: none;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
+            gap: 5px;
             z-index: 200;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
         
         .color-dropdown.show {
@@ -301,16 +301,16 @@
         }
         
         .color-btn {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             cursor: pointer;
-            border: 2px solid transparent;
+            border: 1.5px solid transparent;
             transition: all 0.2s ease;
         }
         
         .color-btn:hover {
-            transform: scale(1.2);
+            transform: scale(1.15);
             border-color: white;
         }
         
@@ -324,67 +324,59 @@
             box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
         }
         
-        /* MS Word Style Hamburger Menu */
+        /* MS Word Style Hamburger Menu - Compact & Smart */
         .hamburger {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 10px;
+            left: 10px;
             z-index: 100;
-            width: 48px;
-            height: 48px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(145deg, #2563eb, #1d4ed8);
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             cursor: pointer;
-            box-shadow: 
-                0 4px 6px rgba(37, 99, 235, 0.3),
-                0 1px 3px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
             transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: none;
         }
         
         .hamburger:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 6px 12px rgba(37, 99, 235, 0.4),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
         }
         
         .hamburger:active {
-            transform: translateY(0);
+            transform: scale(0.95);
         }
         
         .hamburger span {
-            width: 24px;
-            height: 3px;
+            width: 18px;
+            height: 2px;
             background: white;
-            border-radius: 3px;
+            border-radius: 2px;
             transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
         
         .hamburger span:nth-child(1) {
-            width: 20px;
+            width: 14px;
         }
         
         .hamburger span:nth-child(3) {
-            width: 16px;
+            width: 10px;
         }
         
         .hamburger:hover span {
-            width: 24px;
+            width: 18px;
         }
         
         .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-            width: 24px;
+            transform: rotate(45deg) translate(4px, 4px);
+            width: 18px;
         }
         
         .hamburger.active span:nth-child(2) {
@@ -393,61 +385,83 @@
         }
         
         .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-            width: 24px;
+            transform: rotate(-45deg) translate(4px, -4px);
+            width: 18px;
         }
         
-        /* Export Button */
+        /* Export Button - Smart & Stylish */
         .export-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 50px;
+            right: 15px;
             z-index: 100;
         }
         
-        /* MS Word Style Toolbar - Fixed Position */
+        .export-btn button {
+            padding: 6px 12px !important;
+            font-size: 11px !important;
+            border-radius: 20px !important;
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+        }
+        
+        .export-btn svg {
+            width: 14px !important;
+            height: 14px !important;
+        }
+        
+        /* MS Word Style Toolbar - Compact & Smart */
         .toolbar {
             position: fixed;
-            top: 15px;
+            top: 8px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 90;
             display: flex;
-            gap: 2px;
-            padding: 8px 16px;
-            border-radius: 8px;
+            gap: 1px;
+            padding: 4px 10px;
+            border-radius: 6px;
             background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         .toolbar button {
-            width: 38px;
-            height: 38px;
-            border-radius: 6px;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.15s ease;
             background: transparent;
-            border: 1px solid transparent;
+            border: none;
+        }
+        
+        .toolbar button svg {
+            width: 14px;
+            height: 14px;
         }
         
         .toolbar button:hover {
-            background: rgba(255,255,255,0.12);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: none;
+            background: rgba(255,255,255,0.15);
         }
         
         .toolbar button:active {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
         }
         
         .toolbar-divider {
             width: 1px;
-            height: 28px;
+            height: 20px;
             background: rgba(255, 255, 255, 0.15);
-            margin: 5px 8px;
+            margin: 4px 6px;
         }
         
         .slide-in {
@@ -647,7 +661,7 @@
     </div>
 
     <!-- Main Content - A4 Page -->
-    <main class="pt-20 pb-16 px-4 main-container">
+    <main class="pt-12 pb-12 px-4 main-container">
         <div class="a4-page" id="pageContainer">
             <div id="editor" contenteditable="true" class="editor-area"></div>
             <div class="page-number">Page <span id="currentPage">1</span></div>
@@ -910,9 +924,11 @@
             // Get current font size
             const computedStyle = window.getComputedStyle(range.startContainer.parentElement);
             let currentSize = parseInt(computedStyle.fontSize) || 12;
-            let newSize = currentSize + (delta * 2);
             
-            // Limit font size range (max 72)
+            // Increment by 4px for faster scaling, max 72px
+            let newSize = currentSize + (delta * 4);
+            
+            // Limit font size range (min 8, max 72)
             newSize = Math.max(8, Math.min(72, newSize));
             
             span.style.fontSize = newSize + 'px';
@@ -1048,12 +1064,13 @@
                     pdf.setTextColor(0);
                     pdf.text(`Page ${i} of ${totalPages}`, 105, 289, { align: 'center' });
                     
-                    // Add watermark if exists (bottom right corner, 1.5 inch = ~38mm)
+                    // Add watermark if exists (bottom right corner, 1.5 inch = ~38mm, opacity 30%)
                     try {
                         const watermarkImg = document.querySelector('.watermark img');
                         if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
+                            pdf.setGState(new pdf.GState({opacity: 0.3}));
                             pdf.addImage(watermarkImg.src, 'PNG', 162, 247, 38, 38, '', 'FAST', 0);
-                            pdf.setGState(new pdf.GState({opacity: 0.4}));
+                            pdf.setGState(new pdf.GState({opacity: 1}));
                         }
                     } catch(err) {
                         // Watermark not available
