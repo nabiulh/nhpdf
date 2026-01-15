@@ -190,7 +190,7 @@
         }
         
         .editor-area {
-            font-size: 14px;
+            font-size: 20px;
             line-height: 1.6;
             min-height: calc(297mm - 30mm);
             outline: none;
@@ -330,8 +330,8 @@
             bottom: 12mm;
             right: 10mm;
             width: 1.5in;
-            height: 1.5in;
-            opacity: 0.35;
+            height: 2in;
+            opacity: 0.5;
             pointer-events: none;
             z-index: 1;
         }
@@ -1452,7 +1452,7 @@
         <!-- Default Font Size Control (Global) -->
         <div class="toolbar-font-size">
             <span class="label">Default:</span>
-            <input type="number" id="defaultFontSize" min="8" max="48" value="14" title="Default Font Size (Global)">
+            <input type="number" id="defaultFontSize" min="8" max="48" value="20" title="Default Font Size (Global)">
         </div>
         <div class="toolbar-divider"></div>
         <!-- Selected Text Font Size Dropdown -->
@@ -1682,11 +1682,11 @@
                             <span class="text-cyan-400 text-[10px] font-bold">Aa</span>
                         </div>
                         Font Size
-                        <span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="fontSizeValue">14px</span>
+                        <span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="fontSizeValue">20px</span>
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="text-[10px] text-gray-500">A</span>
-                        <input type="range" id="fontSizeSlider" min="10" max="24" value="14" class="flex-grow h-1">
+                        <input type="range" id="fontSizeSlider" min="10" max="30" value="20" class="flex-grow h-1">
                         <span class="text-sm font-bold text-gray-400">A</span>
                     </div>
                 </div>
@@ -2157,7 +2157,7 @@
                 localStorage.removeItem('nabiulword_content');
                 localStorage.removeItem('nabiulword_images');
                 
-                const defaultSize = 14;
+                const defaultSize = 20;
                 if (editorEl) editorEl.style.fontSize = defaultSize + 'px';
                 defaultFontSizeInput.value = defaultSize;
                 fontSizeSlider.value = defaultSize;
@@ -2166,7 +2166,7 @@
                 
                 totalPages = 1;
                 updatePageInfo();
-                showToast('Content cleared! Font size reset to 14px');
+                showToast('Content cleared! Font size reset to 20px');
                 updateWordCount();
             }
         }
@@ -2326,8 +2326,9 @@
                         try {
                             const watermarkImg = document.querySelector('.watermark img');
                             if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
-                                pdf.setGState(new pdf.GState({opacity: 0.35}));
-                                pdf.addImage(watermarkImg.src, 'PNG', 158, 243, 38.1, 38.1, '', 'FAST', 0);
+                                pdf.setGState(new pdf.GState({opacity: 0.5}));
+                                // Width: 1.5in = 38.1mm, Height: 2in = 50.8mm
+                                pdf.addImage(watermarkImg.src, 'PNG', 162, 231, 38.1, 50.8, '', 'FAST', 0);
                                 pdf.setGState(new pdf.GState({opacity: 1}));
                             }
                         } catch(err) {}
@@ -2412,7 +2413,7 @@
         
         // Load Settings
         function loadSettings() {
-            const fontSize = localStorage.getItem('nabiulword_fontSize') || 14;
+            const fontSize = localStorage.getItem('nabiulword_fontSize') || 20;
             const brightness = localStorage.getItem('nabiulword_brightness') || 100;
             const theme = localStorage.getItem('nabiulword_theme') || 'default';
             const toolbarPosition = JSON.parse(localStorage.getItem('nabiulword_toolbar_position') || 'null');
