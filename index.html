@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NabiulWord - Smart Notepad</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -16,16 +16,60 @@
             --text: #f1f5f9;
             --accent: #22d3ee;
             --page-bg: #ffffff;
-            --page-text: #1a1a1a;
+            --page-text: #000000;
         }
         
-        .theme-ocean { --primary: #0ea5e9; --secondary: #06b6d4; --bg: #0c1222; --surface: #1a2744; --text: #e0f2fe; --accent: #38bdf8; }
-        .theme-forest { --primary: #22c55e; --secondary: #10b981; --bg: #0a1a12; --surface: #14332a; --text: #dcfce7; --accent: #4ade80; }
-        .theme-sunset { --primary: #f97316; --secondary: #fb923c; --bg: #1c0f0a; --surface: #3d2317; --text: #ffedd5; --accent: #fdba74; }
-        .theme-rose { --primary: #ec4899; --secondary: #f472b6; --bg: #1a0a14; --surface: #3d1a2e; --text: #fce7f3; --accent: #f9a8d4; }
-        .theme-light { --primary: #6366f1; --secondary: #8b5cf6; --bg: #f8fafc; --surface: #ffffff; --text: #1e293b; --accent: #3b82f6; }
+        .theme-ocean {
+            --primary: #0ea5e9;
+            --secondary: #06b6d4;
+            --bg: #0c1222;
+            --surface: #1a2744;
+            --text: #e0f2fe;
+            --accent: #38bdf8;
+        }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', 'Noto Sans Bengali', sans-serif; }
+        .theme-forest {
+            --primary: #22c55e;
+            --secondary: #10b981;
+            --bg: #0a1a12;
+            --surface: #14332a;
+            --text: #dcfce7;
+            --accent: #4ade80;
+        }
+        
+        .theme-sunset {
+            --primary: #f97316;
+            --secondary: #fb923c;
+            --bg: #1c0f0a;
+            --surface: #3d2317;
+            --text: #ffedd5;
+            --accent: #fdba74;
+        }
+        
+        .theme-rose {
+            --primary: #ec4899;
+            --secondary: #f472b6;
+            --bg: #1a0a14;
+            --surface: #3d1a2e;
+            --text: #fce7f3;
+            --accent: #f9a8d4;
+        }
+        
+        .theme-light {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --accent: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+        }
         
         body {
             background: var(--bg);
@@ -34,228 +78,1701 @@
             transition: all 0.4s ease;
             filter: brightness(var(--brightness, 1));
             position: relative;
+            overflow-x: hidden;
         }
         
+        /* MS Word Style Background */
         body::before {
-            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 1) 100%), repeating-linear-gradient(0deg, transparent, transparent 50px, rgba(99, 102, 241, 0.03) 50px, rgba(99, 102, 241, 0.03) 51px);
-            pointer-events: none; z-index: 0;
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 1) 100%),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 50px,
+                    rgba(99, 102, 241, 0.03) 50px,
+                    rgba(99, 102, 241, 0.03) 51px
+                );
+            pointer-events: none;
+            z-index: 0;
         }
         
+        /* Subtle top ribbon glow */
         body::after {
-            content: ''; position: fixed; top: 0; left: 0; right: 0; height: 130px;
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 130px;
             background: linear-gradient(180deg, rgba(37, 99, 235, 0.15) 0%, transparent 100%);
-            pointer-events: none; z-index: 0;
+            pointer-events: none;
+            z-index: 0;
         }
         
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .main-container { position: relative; z-index: 1; }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
         
-        /* A4 Page Styling */
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Pages Container */
+        .pages-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding-bottom: 40px;
+        }
+        
+        /* A4 Page Styling - MS Word Like */
         .a4-page {
             width: 210mm;
             min-height: 297mm;
             background: var(--page-bg);
             color: var(--page-text);
             padding: 5mm;
-            margin: 20px auto;
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.12), 0 16px 48px rgba(0,0,0,0.15);
+            margin: 0 auto 30px auto;
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.08),
+                0 2px 8px rgba(0,0,0,0.08),
+                0 8px 32px rgba(0,0,0,0.12),
+                0 16px 48px rgba(0,0,0,0.15);
             position: relative;
             border: none;
+            border-radius: 0;
             overflow: visible;
         }
         
-        /* Borders */
-        .a4-page::before { content: ''; position: absolute; top: 6mm; left: 6mm; right: 6mm; bottom: 6mm; border: 2px solid #000; pointer-events: none; }
-        .a4-page::after { content: ''; position: absolute; top: 7.5mm; left: 7.5mm; right: 7.5mm; bottom: 7.5mm; border: 0.8px solid #1a1a1a; pointer-events: none; }
+        /* Page Break Line - Inside Editor */
+        .page-break-line {
+            position: absolute;
+            left: 8mm;
+            right: 8mm;
+            height: 3px;
+            background: repeating-linear-gradient(90deg, #6366f1 0px, #6366f1 10px, transparent 10px, transparent 20px);
+            z-index: 5;
+            pointer-events: none;
+        }
+        
+        /* Outer Border - Strong Black */
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            top: 6mm;
+            left: 6mm;
+            right: 6mm;
+            bottom: 6mm;
+            border: 2px solid #000;
+            pointer-events: none;
+        }
+        
+        /* Inner Border - Thin Black */
+        .a4-page::after {
+            content: '';
+            position: absolute;
+            top: 7.5mm;
+            left: 7.5mm;
+            right: 7.5mm;
+            bottom: 7.5mm;
+            border: 0.8px solid #000000;
+            pointer-events: none;
+        }
         
         .editor-area {
-            font-size: 12px;
+            font-size: 14px;
             line-height: 1.6;
-            min-height: calc(297mm - 35mm);
+            min-height: calc(297mm - 30mm);
             outline: none;
-            color: #1a1a1a;
-            padding: 8mm 4mm 25mm 4mm;
-            margin: 8mm 7mm 12mm 7mm;
+            color: #000000;
+            padding: 3mm 4mm 18mm 4mm;
+            margin: 9mm 8mm 15mm 8mm;
             overflow-wrap: break-word;
             word-wrap: break-word;
             text-align: justify;
+            overflow: visible;
+            position: relative;
+            /* CSS Columns for multi-page effect */
+            column-width: calc(210mm - 24mm);
+            column-gap: 0;
+            column-fill: auto;
         }
         
-        /* --- ULTIMATE FIX FOR LINE CUTTING --- */
-        .editor-area p, .editor-area div, .editor-area li, .editor-area h1, .editor-area h2, .editor-area h3, .editor-area table {
+        /* Compact paragraph spacing */
+        .editor-area p {
+            margin-bottom: 0.3em;
+        }
+        
+        .editor-area br {
+            line-height: 1.2;
+        }
+        
+        /* Print/PDF page break styling */
+        @media print {
+            .a4-page {
+                page-break-after: always;
+                page-break-inside: avoid;
+            }
+            
+            .editor-area {
+                padding-top: 8mm !important;
+                padding-bottom: 12mm !important;
+            }
+            
+            .page-break-indicator {
+                display: none;
+            }
+        }
+        
+        /* Prevent line cutting at page break - FIXED */
+        .editor-area p,
+        .editor-area div,
+        .editor-area span,
+        .editor-area li,
+        .editor-area h1,
+        .editor-area h2,
+        .editor-area h3,
+        .editor-area h4,
+        .editor-area h5,
+        .editor-area h6,
+        .editor-area tr,
+        .editor-area td,
+        .editor-area th,
+        .editor-area table,
+        .editor-area ul,
+        .editor-area ol {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
-            /* Small padding bottom helps letters like g,j,y,p,q not get cut */
-            padding-bottom: 2px; 
-            margin-bottom: 5px;
+            -webkit-column-break-inside: avoid !important;
+            orphans: 3;
+            widows: 3;
         }
         
-        .editor-area span, .editor-area a, .editor-area b, .editor-area i, .editor-area u { display: inline !important; }
-        
-        @media print {
-            .a4-page { page-break-after: always; page-break-inside: avoid; }
-            .editor-area { padding-top: 10mm !important; padding-bottom: 20mm !important; }
+        /* Visual Page Separator Line */
+        .page-separator {
+            width: 100%;
+            height: 40px;
+            position: relative;
+            margin: 15mm 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .editor-area:empty::before { content: 'Paste or type your content here...'; color: #999; font-style: italic; }
+        .page-separator::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 3px;
+            background: repeating-linear-gradient(
+                90deg,
+                #6366f1 0px,
+                #6366f1 15px,
+                transparent 15px,
+                transparent 25px
+            );
+        }
+        
+        .page-separator::after {
+            content: '📄 Page Break';
+            background: var(--bg);
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #6366f1;
+            border: 2px dashed #6366f1;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        /* Ensure text doesn't overflow page boundary */
+        .editor-area * {
+            max-width: 100%;
+            overflow-wrap: break-word;
+        }
+        
+        .editor-area:empty::before {
+            content: 'Paste or type your content here...';
+            color: #999;
+            font-style: italic;
+        }
         
         .page-number {
-            position: absolute; bottom: 8mm; left: 50%; transform: translateX(-50%);
-            font-size: 9px; color: #000; background: white; padding: 2px 12px;
-            border-radius: 3px; border: 1px solid #333; font-weight: 600; z-index: 10;
+            position: absolute;
+            bottom: 8mm;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #000;
+            background: white;
+            padding: 2px 12px;
+            border-radius: 3px;
+            border: 1px solid #333;
+            font-weight: 600;
+            z-index: 10;
         }
         
-        .watermark { position: absolute; bottom: 12mm; right: 10mm; width: 1.5in; height: 1.5in; opacity: 0.3; pointer-events: none; z-index: 1; }
-        .watermark img { width: 100%; height: 100%; object-fit: contain; }
+        /* Watermark - Bottom Right Corner - Behind Text */
+        .watermark {
+            position: absolute;
+            bottom: 12mm;
+            right: 10mm;
+            width: 1.5in;
+            height: 1.5in;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 1;
+        }
         
-        /* UI Components */
-        .color-picker-container { position: relative; }
+        .watermark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Font Picker Dropdown */
+        .font-picker-container {
+            position: relative;
+        }
+        
+        .font-dropdown {
+            position: absolute;
+            top: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 0;
+            display: none;
+            min-width: 200px;
+            max-width: 250px;
+            z-index: 200;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            overflow: hidden;
+            overscroll-behavior: contain;
+            touch-action: auto;
+        }
+        
+        .font-dropdown.show {
+            display: block;
+        }
+        
+        .font-dropdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(99, 102, 241, 0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 12px;
+            font-weight: 600;
+            color: #a5b4fc;
+        }
+        
+        .add-font-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #6366f1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .add-font-btn:hover {
+            background: #818cf8;
+            transform: scale(1.1);
+        }
+        
+        .font-history {
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 8px;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+            scrollbar-width: thin;
+        }
+        
+        .font-history::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .font-history::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .font-history::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.5);
+            border-radius: 3px;
+        }
+        
+        .font-history::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.7);
+        }
+        
+        .font-history:empty::before {
+            content: 'No fonts added yet';
+            display: block;
+            text-align: center;
+            color: #6b7280;
+            font-size: 11px;
+            padding: 15px;
+            font-style: italic;
+        }
+        
+        .font-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .font-item:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+        
+        .font-item-name {
+            font-size: 12px;
+            color: #e5e7eb;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .font-item-preview {
+            font-size: 14px;
+            color: #a5b4fc;
+            margin-left: 8px;
+        }
+        
+        .font-item-delete {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: transparent;
+            color: #9ca3af;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 6px;
+            transition: all 0.2s;
+        }
+        
+        .font-item-delete:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .font-dropdown-footer {
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        
+        .font-dropdown-footer small {
+            color: #6b7280;
+            font-size: 10px;
+        }
+        
+        /* Color Picker Dropdown */
+        .color-picker-container {
+            position: relative;
+        }
+        
         .color-dropdown {
-            position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
-            background: #1f2937; border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px; padding: 8px; display: none;
-            grid-template-columns: repeat(5, 1fr); gap: 5px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            position: absolute;
+            top: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 8px;
+            display: none;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            z-index: 200;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
-        .color-dropdown.show { display: grid; }
-        .color-btn { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 1.5px solid transparent; transition: all 0.2s ease; }
-        .color-btn:hover { transform: scale(1.15); border-color: white; }
         
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4); }
+        .color-dropdown.show {
+            display: grid;
+        }
         
+        .color-btn {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 1.5px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.15);
+            border-color: white;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        /* MS Word Style Hamburger Menu - Compact & Smart */
         .hamburger {
-            position: fixed; top: 10px; left: 10px; z-index: 100;
-            width: 36px; height: 36px; background: linear-gradient(145deg, #2563eb, #1d4ed8);
-            border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            gap: 4px; cursor: pointer; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4); border: none;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(145deg, #2563eb, #1d4ed8);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+            transition: all 0.2s ease;
+            border: none;
         }
-        .hamburger span { width: 18px; height: 2px; background: white; border-radius: 2px; transition: all 0.3s; }
-        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
-        .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
         
-        .export-btn { position: fixed; top: 50px; right: 15px; z-index: 100; }
-        .export-btn button { padding: 6px 12px !important; font-size: 11px !important; border-radius: 20px !important; background: linear-gradient(135deg, #10b981, #059669) !important; }
+        .hamburger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+        }
         
+        .hamburger:active {
+            transform: scale(0.95);
+        }
+        
+        .hamburger span {
+            width: 18px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .hamburger span:nth-child(1) {
+            width: 14px;
+        }
+        
+        .hamburger span:nth-child(3) {
+            width: 10px;
+        }
+        
+        .hamburger:hover span {
+            width: 18px;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4px, 4px);
+            width: 18px;
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4px, -4px);
+            width: 18px;
+        }
+        
+        /* Export Button - Smart & Stylish */
+        .export-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+        }
+        
+        .export-btn button {
+            padding: 8px 16px !important;
+            font-size: 12px !important;
+            border-radius: 20px !important;
+            background: linear-gradient(135deg, #10b981, #059669) !important;
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .export-btn button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.5);
+        }
+        
+        .export-btn svg {
+            width: 16px !important;
+            height: 16px !important;
+        }
+        
+        /* Smart Floating Toolbar - Fixed Left Side Below Hamburger */
         .toolbar {
-            position: fixed; top: 8px; left: 50%; transform: translateX(-50%); z-index: 90;
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 2px; padding: 5px 8px;
-            border-radius: 8px; background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1); max-width: 320px;
+            position: fixed;
+            top: 55px;
+            left: 10px;
+            transform: none;
+            z-index: 90;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 3px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            max-width: 95vw;
+            backdrop-filter: blur(20px);
+            cursor: move;
+            transition: top 0.3s ease-out;
         }
-        .toolbar button { width: 26px; height: 26px; border-radius: 4px; display: flex; align-items: center; justify-content: center; background: transparent; border: none; }
-        .toolbar button:hover { background: rgba(255,255,255,0.15); }
-        .toolbar-divider { width: 1px; height: 18px; background: rgba(255, 255, 255, 0.15); margin: 4px 3px; }
         
-        .theme-card { cursor: pointer; transition: all 0.3s ease; }
-        .theme-card:hover { transform: scale(1.05); }
+        .toolbar.toolbar-bottom {
+            top: auto !important;
+            bottom: 50px;
+        }
         
+        .toolbar button {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.85);
+        }
+        
+        .toolbar button svg {
+            width: 15px;
+            height: 15px;
+        }
+        
+        .toolbar button:hover {
+            background: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .toolbar button:active {
+            transform: translateY(0) scale(0.95);
+            background: rgba(99, 102, 241, 0.5);
+        }
+        
+        .toolbar-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 4px;
+        }
+        
+        /* Font Size Inputs in Toolbar */
+        .toolbar-font-size {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: rgba(255,255,255,0.8);
+            font-size: 11px;
+        }
+        
+        .toolbar-font-size input[type="number"] {
+            width: 55px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .toolbar-font-size input[type="number"]:focus {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+        }
+        
+        .toolbar-font-size input[type="number"]::-webkit-inner-spin-button,
+        .toolbar-font-size input[type="number"]::-webkit-outer-spin-button {
+            opacity: 1;
+            height: 24px;
+        }
+        
+        .toolbar-font-size select {
+            width: 70px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .toolbar-font-size select:focus {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.2);
+        }
+        
+        .toolbar-font-size span.label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease forwards;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .theme-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .theme-card.active {
+            ring: 3px solid var(--accent);
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            background: var(--surface);
+            border-radius: 5px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* MS Word Style Status Bar */
         .status-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 20px;
-            display: flex; justify-content: space-between; font-size: 11px; z-index: 50;
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 6px 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            z-index: 50;
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
         
+        /* ============ RESPONSIVE DESIGN ============ */
+        
+        /* Tablet */
+        @media screen and (max-width: 900px) {
+            .a4-page {
+                width: 95%;
+                height: auto;
+                min-height: auto;
+                max-height: none;
+                padding: 4mm;
+                margin: 0 auto;
+            }
+            
+            .editor-area {
+                margin: 8mm 6mm 12mm 6mm;
+                height: auto;
+                min-height: 60vh;
+                max-height: none;
+            }
+            
+            .toolbar {
+                max-width: 90vw;
+                padding: 6px 10px;
+                gap: 2px;
+            }
+            
+            .toolbar button {
+                width: 30px;
+                height: 30px;
+            }
+            
+        }
+        
+        /* Mobile */
+        @media screen and (max-width: 600px) {
+            .a4-page {
+                width: 100%;
+                height: auto;
+                min-height: auto;
+                max-height: none;
+                padding: 3mm;
+                margin: 0 auto;
+                border-radius: 0;
+            }
+            
+            .a4-page::before {
+                top: 4mm;
+                left: 4mm;
+                right: 4mm;
+                bottom: 4mm;
+            }
+            
+            .a4-page::after {
+                top: 5.5mm;
+                left: 5.5mm;
+                right: 5.5mm;
+                bottom: 5.5mm;
+            }
+            
+            .editor-area {
+                margin: 6mm 5mm 10mm 5mm;
+                padding: 2mm 3mm 15mm 3mm;
+                height: auto;
+                min-height: 50vh;
+                max-height: none;
+                font-size: 13px;
+            }
+            
+            .toolbar {
+                top: 50px;
+                left: 8px;
+                max-width: 98vw;
+                padding: 5px 8px;
+                gap: 1px;
+                border-radius: 12px;
+            }
+            
+            .toolbar button {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .toolbar button svg {
+                width: 13px;
+                height: 13px;
+            }
+            
+            .toolbar-divider {
+                height: 20px;
+                margin: 0 2px;
+            }
+            
+            .hamburger {
+                width: 32px;
+                height: 32px;
+                top: 8px;
+                left: 8px;
+            }
+            
+            .export-btn {
+                top: 8px;
+                right: 8px;
+            }
+            
+            .export-btn button {
+                padding: 6px 12px !important;
+                font-size: 10px !important;
+            }
+            
+            .export-btn button span {
+                display: none;
+            }
+            
+            .status-bar {
+                padding: 4px 10px;
+                font-size: 9px;
+            }
+            
+            .page-number {
+                font-size: 8px;
+                padding: 2px 8px;
+            }
+            
+            #sideMenu {
+                width: 85vw;
+                max-width: 300px;
+            }
+            
+        }
+        
+        /* Very small screens */
+        @media screen and (max-width: 380px) {
+            .toolbar {
+                padding: 4px 6px;
+            }
+            
+            .toolbar button {
+                width: 26px;
+                height: 26px;
+            }
+            
+            .toolbar button svg {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .toolbar-divider {
+                display: none;
+            }
+        }
+
         @media print, screen and (max-width: 800px) {
-            .a4-page { width: 100%; min-height: auto; padding: 15mm; margin: 10px; }
+            .a4-page {
+                width: 100%;
+                height: auto;
+                min-height: auto;
+                max-height: none;
+                padding: 15mm;
+                margin: 10px;
+            }
+        }
+
+        /* PDF Styles */
+        .pdf-content {
+            font-family: 'Times New Roman', serif;
         }
         
-        .pulse { animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        /* =============== IMAGE CONTAINER STYLES =============== */
+        .draggable-image-container {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            z-index: 50;
+            display: inline-block;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .draggable-image-container:hover,
+        .draggable-image-container.selected {
+            border-color: #3b82f6;
+        }
+        
+        .draggable-image-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            pointer-events: none;
+        }
+        
+        /* Image Controls */
+        .image-controls {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 4px;
+            background: #1f2937;
+            padding: 4px 8px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            z-index: 100;
+        }
+        
+        .draggable-image-container.selected .image-controls {
+            display: flex;
+        }
+        
+        .image-controls button {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .image-controls button:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .image-controls button.delete-btn:hover {
+            background: #ef4444;
+        }
+        
+        .image-controls button.crop-btn:hover {
+            background: #8b5cf6;
+        }
+        
+        .image-controls button.opacity-btn:hover {
+            background: #0ea5e9;
+        }
+        
+        .image-controls button.layer-btn:hover {
+            background: #f59e0b;
+        }
+        
+        /* Opacity Slider in Image Controls */
+        .image-opacity-slider {
+            position: absolute;
+            top: -75px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            z-index: 110;
+        }
+        
+        .image-opacity-slider.show {
+            display: flex;
+        }
+        
+        .image-opacity-slider label {
+            font-size: 10px;
+            color: #9ca3af;
+            white-space: nowrap;
+        }
+        
+        .image-opacity-slider input[type="range"] {
+            width: 100px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+        
+        .image-opacity-slider input[type="range"]::-webkit-slider-thumb {
+            width: 14px;
+            height: 14px;
+            background: #3b82f6;
+            border-radius: 50%;
+        }
+        
+        .image-opacity-slider .opacity-value {
+            font-size: 11px;
+            color: #60a5fa;
+            font-weight: 600;
+        }
+        
+        /* Layer indicator for images behind text */
+        .draggable-image-container.behind-text {
+            z-index: 2 !important;
+        }
+        
+        .draggable-image-container.behind-text::after {
+            content: '📄';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            background: rgba(245, 158, 11, 0.8);
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .draggable-image-container.behind-text.selected::after {
+            display: block;
+        }
+        
+        /* Resize Handles */
+        .resize-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #3b82f6;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: none;
+            z-index: 60;
+        }
+        
+        .draggable-image-container.selected .resize-handle {
+            display: block;
+        }
+        
+        .resize-handle.nw { top: -6px; left: -6px; cursor: nw-resize; }
+        .resize-handle.ne { top: -6px; right: -6px; cursor: ne-resize; }
+        .resize-handle.sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+        .resize-handle.se { bottom: -6px; right: -6px; cursor: se-resize; }
+        
+        /* Rotate Handle */
+        .rotate-handle {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #22c55e;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: grab;
+            display: none;
+            z-index: 60;
+        }
+        
+        .draggable-image-container.selected .rotate-handle {
+            display: block;
+        }
+        
+        .rotate-handle::after {
+            content: '↻';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Hidden file input */
+        #imageInput {
+            display: none;
+        }
+        
+        /* =============== IMAGE CROP MODAL =============== */
+        .crop-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .crop-modal.show {
+            display: flex;
+        }
+        
+        .crop-container {
+            position: relative;
+            max-width: 90vw;
+            max-height: 70vh;
+            overflow: hidden;
+            background: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .crop-container img {
+            max-width: 100%;
+            max-height: 65vh;
+            display: block;
+        }
+        
+        .crop-box {
+            position: absolute;
+            border: 2px dashed #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+            cursor: move;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+        }
+        
+        .crop-handle {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #3b82f6;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+        
+        .crop-handle.tl { top: -8px; left: -8px; cursor: nw-resize; }
+        .crop-handle.tr { top: -8px; right: -8px; cursor: ne-resize; }
+        .crop-handle.bl { bottom: -8px; left: -8px; cursor: sw-resize; }
+        .crop-handle.br { bottom: -8px; right: -8px; cursor: se-resize; }
+        
+        .crop-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .crop-controls button {
+            padding: 10px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .crop-btn-apply {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .crop-btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .crop-btn-skip {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        
+        .crop-btn-skip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .crop-btn-cancel {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        
+        .crop-btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .crop-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .crop-hint {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        /* Aspect Ratio Buttons */
+        .aspect-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .aspect-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .aspect-btn:hover,
+        .aspect-btn.active {
+            background: rgba(99, 102, 241, 0.5);
+            border-color: #6366f1;
+        }
+        
+        /* Mobile crop modal */
+        @media screen and (max-width: 600px) {
+            .crop-container {
+                max-width: 95vw;
+                max-height: 60vh;
+            }
+            
+            .crop-container img {
+                max-height: 55vh;
+            }
+            
+            .crop-controls button {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .crop-title {
+                font-size: 16px;
+            }
+            
+            .aspect-btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
 <body class="theme-default">
-    <!-- Menu & Buttons -->
-    <div class="hamburger" id="hamburgerBtn"><span></span><span></span><span></span></div>
+    <!-- Hidden Image Input -->
+    <input type="file" id="imageInput" accept="image/*" multiple>
+    
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
 
+    <!-- Export PDF Button -->
     <div class="export-btn">
         <button id="exportBtn" class="btn-primary px-5 py-3 rounded-2xl text-white font-medium flex items-center gap-2 shadow-lg">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            Export PDF
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span>Export PDF</span>
         </button>
     </div>
 
-    <!-- Floating Toolbar -->
-    <div class="toolbar glass">
-        <button onclick="formatText('bold')" title="Bold"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg></button>
-        <button onclick="formatText('italic')" title="Italic"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"/></svg></button>
-        <button onclick="formatText('underline')" title="Underline"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 21h14"/></svg></button>
+    <!-- Floating Toolbar - MOVABLE -->
+    <div class="toolbar glass" id="toolbar">
+        <button onclick="formatText('bold')" title="Bold (Ctrl+B)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/>
+            </svg>
+        </button>
+        <button onclick="formatText('italic')" title="Italic (Ctrl+I)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 4h4m-2 0v16m-4 0h8"/>
+            </svg>
+        </button>
+        <button onclick="formatText('underline')" title="Underline (Ctrl+U)">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v7a5 5 0 0010 0V4M5 21h14"/>
+            </svg>
+        </button>
         <div class="toolbar-divider"></div>
-        <button onclick="changeSelectedFontSize(-1)" class="text-blue-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg></button>
-        <span class="text-xs px-1 text-white/70">A</span>
-        <button onclick="changeSelectedFontSize(1)" class="text-green-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></button>
+        <!-- Default Font Size Control (Global) -->
+        <div class="toolbar-font-size">
+            <span class="label">Default:</span>
+            <input type="number" id="defaultFontSize" min="8" max="48" value="14" title="Default Font Size (Global)">
+        </div>
         <div class="toolbar-divider"></div>
+        <!-- Selected Text Font Size Dropdown -->
+        <div class="toolbar-font-size">
+            <span class="label">Selected:</span>
+            <select id="toolbarFontSize" title="Selected Text Font Size">
+                <option value="">--</option>
+                <option value="10">10px</option>
+                <option value="12">12px</option>
+                <option value="14" selected>14px</option>
+                <option value="16">16px</option>
+                <option value="18">18px</option>
+                <option value="20">20px</option>
+                <option value="24">24px</option>
+                <option value="28">28px</option>
+                <option value="32">32px</option>
+            </select>
+        </div>
+        <div class="toolbar-divider"></div>
+        <!-- Color Picker -->
         <div class="color-picker-container">
-            <button onmousedown="saveSelection()" onclick="toggleColorPicker()" class="text-yellow-400" id="colorPickerBtn">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="5" fill="currentColor"/></svg>
+            <button onmousedown="saveSelection()" onclick="toggleColorPicker()" title="Text Color" class="text-yellow-400" id="colorPickerBtn">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                </svg>
             </button>
             <div class="color-dropdown" id="colorDropdown">
-                <div class="color-btn" style="background:#000000" onclick="applyColor('#000000')"></div>
-                <div class="color-btn" style="background:#ffffff; border:1px solid #ccc" onclick="applyColor('#ffffff')"></div>
-                <div class="color-btn" style="background:#ef4444" onclick="applyColor('#ef4444')"></div>
-                <div class="color-btn" style="background:#22c55e" onclick="applyColor('#22c55e')"></div>
-                <div class="color-btn" style="background:#3b82f6" onclick="applyColor('#3b82f6')"></div>
-                <div class="color-btn" style="background:#8b5cf6" onclick="applyColor('#8b5cf6')"></div>
-                <div class="color-btn" style="background:#f97316" onclick="applyColor('#f97316')"></div>
-                <div class="color-btn" style="background:#eab308" onclick="applyColor('#eab308')"></div>
-                <div class="color-btn" style="background:#ec4899" onclick="applyColor('#ec4899')"></div>
-                <div class="color-btn" style="background:#64748b" onclick="applyColor('#64748b')"></div>
+                <!-- 20 Colors - Text Visible Colors -->
+                <div class="color-btn" style="background:#000000" onclick="applyColor('#000000')" title="Black"></div>
+                <div class="color-btn" style="background:#1a1a1a" onclick="applyColor('#1a1a1a')" title="Dark Black"></div>
+                <div class="color-btn" style="background:#dc2626" onclick="applyColor('#dc2626')" title="Red"></div>
+                <div class="color-btn" style="background:#ea580c" onclick="applyColor('#ea580c')" title="Orange"></div>
+                <div class="color-btn" style="background:#ca8a04" onclick="applyColor('#ca8a04')" title="Dark Yellow"></div>
+                <div class="color-btn" style="background:#16a34a" onclick="applyColor('#16a34a')" title="Green"></div>
+                <div class="color-btn" style="background:#0d9488" onclick="applyColor('#0d9488')" title="Teal"></div>
+                <div class="color-btn" style="background:#2563eb" onclick="applyColor('#2563eb')" title="Blue"></div>
+                <div class="color-btn" style="background:#4f46e5" onclick="applyColor('#4f46e5')" title="Indigo"></div>
+                <div class="color-btn" style="background:#7c3aed" onclick="applyColor('#7c3aed')" title="Violet"></div>
+                <div class="color-btn" style="background:#c026d3" onclick="applyColor('#c026d3')" title="Fuchsia"></div>
+                <div class="color-btn" style="background:#db2777" onclick="applyColor('#db2777')" title="Pink"></div>
+                <div class="color-btn" style="background:#e11d48" onclick="applyColor('#e11d48')" title="Rose"></div>
+                <div class="color-btn" style="background:#475569" onclick="applyColor('#475569')" title="Slate"></div>
+                <div class="color-btn" style="background:#78350f" onclick="applyColor('#78350f')" title="Brown"></div>
+                <div class="color-btn" style="background:#064e3b" onclick="applyColor('#064e3b')" title="Dark Emerald"></div>
+                <div class="color-btn" style="background:#1e3a8a" onclick="applyColor('#1e3a8a')" title="Dark Blue"></div>
+                <div class="color-btn" style="background:#581c87" onclick="applyColor('#581c87')" title="Dark Purple"></div>
+                <div class="color-btn" style="background:#0e7490" onclick="applyColor('#0e7490')" title="Cyan"></div>
+                <div class="color-btn" style="background:#4d7c0f" onclick="applyColor('#4d7c0f')" title="Lime"></div>
             </div>
         </div>
         <div class="toolbar-divider"></div>
-        <button onclick="alignText('justifyLeft')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/></svg></button>
-        <button onclick="alignText('justifyCenter')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/></svg></button>
-        <button onclick="alignText('justifyRight')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/></svg></button>
-        <button onclick="alignText('justifyFull')" class="text-white/80"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <!-- Text Alignment -->
+        <button onclick="alignText('justifyLeft')" title="Align Left" class="text-white/80">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h14"/>
+            </svg>
+        </button>
+        <button onclick="alignText('justifyCenter')" title="Align Center" class="text-white/80">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M7 12h10M5 18h14"/>
+            </svg>
+        </button>
+        <button onclick="alignText('justifyRight')" title="Align Right" class="text-white/80">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M10 12h10M6 18h14"/>
+            </svg>
+        </button>
+        <button onclick="alignText('justifyFull')" title="Justify" class="text-white/80">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
         <div class="toolbar-divider"></div>
-        <button onclick="clearEditor()" class="hover:!bg-red-500/30 text-red-400"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+        <!-- Image Insert Button -->
+        <button onclick="document.getElementById('imageInput').click()" title="Insert Image" class="text-purple-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+        </button>
+        <div class="toolbar-divider"></div>
+        <!-- Custom Font Picker -->
+        <div class="font-picker-container">
+            <button onclick="toggleFontPicker()" title="Custom Font" class="text-cyan-400" id="fontPickerBtn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+                    <text x="14" y="18" font-size="8" fill="currentColor" font-weight="bold">F</text>
+                </svg>
+            </button>
+            <div class="font-dropdown" id="fontDropdown">
+                <div class="font-dropdown-header">
+                    <span>🔤 Custom Fonts</span>
+                    <button onclick="document.getElementById('fontFileInput').click()" class="add-font-btn" title="Add Font">+</button>
+                </div>
+                <div class="font-history" id="fontHistory">
+                    <!-- Font history will be loaded here -->
+                </div>
+                <div class="font-dropdown-footer">
+                    <small>Click + to add font from device</small>
+                </div>
+            </div>
+        </div>
+        <input type="file" id="fontFileInput" accept=".ttf,.otf,.woff,.woff2" style="display:none">
+        <div class="toolbar-divider"></div>
+        <button onclick="clearEditor()" class="hover:!bg-red-500/30 text-red-400" title="Clear All">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+        </button>
     </div>
 
-    <!-- Main Content - A4 Page -->
-    <main class="pt-20 pb-12 px-4 main-container">
-        <div class="a4-page" id="pageContainer">
-            <div id="editor" contenteditable="true" class="editor-area"></div>
-            <div class="page-number">Page <span id="currentPage">1</span></div>
-            <div class="watermark"><img src="watermark.png" alt="" onerror="this.parentElement.style.display='none'"></div>
+    <!-- Main Content - Multiple A4 Pages -->
+    <main class="pt-28 pb-16 px-2 main-container">
+        <div class="pages-wrapper" id="pagesWrapper">
+            <div class="a4-page" id="pageContainer" data-page="1">
+                <div id="editor" contenteditable="true" class="editor-area"></div>
+                <div class="page-number">Page <span class="page-num">1</span></div>
+                <!-- Watermark - Bottom Right Corner -->
+                <div class="watermark">
+                    <img src="watermark.png" alt="" onerror="this.parentElement.style.display='none'">
+                </div>
+            </div>
         </div>
     </main>
 
     <!-- Status Bar -->
     <div class="status-bar glass">
         <span id="wordCount">Words: 0 | Characters: 0</span>
-        <span id="lastSaved" class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 pulse"></span> Auto-saved</span>
+        <span id="pageInfo">Page 1 of 1</span>
+        <span id="lastSaved" class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 pulse"></span>
+            Auto-saved
+        </span>
+    </div>
+
+    <!-- Image Crop Modal -->
+    <div class="crop-modal" id="cropModal">
+        <div class="crop-title">✂️ Crop Image</div>
+        <div class="aspect-buttons">
+            <button class="aspect-btn active" data-aspect="free">Free</button>
+            <button class="aspect-btn" data-aspect="1:1">1:1</button>
+            <button class="aspect-btn" data-aspect="4:3">4:3</button>
+            <button class="aspect-btn" data-aspect="16:9">16:9</button>
+            <button class="aspect-btn" data-aspect="3:2">3:2</button>
+        </div>
+        <div class="crop-container" id="cropContainer">
+            <img id="cropImage" src="" alt="Crop Preview">
+            <div class="crop-box" id="cropBox">
+                <div class="crop-handle tl" data-handle="tl"></div>
+                <div class="crop-handle tr" data-handle="tr"></div>
+                <div class="crop-handle bl" data-handle="bl"></div>
+                <div class="crop-handle br" data-handle="br"></div>
+            </div>
+        </div>
+        <div class="crop-hint">Drag to move • Corners to resize</div>
+        <div class="crop-controls">
+            <button class="crop-btn-apply" onclick="applyCrop()">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Apply Crop
+            </button>
+            <button class="crop-btn-skip" onclick="skipCrop()">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                </svg>
+                Use Original
+            </button>
+            <button class="crop-btn-cancel" onclick="cancelCrop()">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                Cancel
+            </button>
+        </div>
     </div>
 
     <!-- Side Menu Panel -->
     <div id="sideMenu" class="fixed top-0 left-0 h-full w-72 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 backdrop-blur-xl z-50 transform -translate-x-full transition-transform duration-300 shadow-2xl border-r border-white/5">
         <div class="p-5 h-full overflow-y-auto">
+            <!-- Logo Header - Smart & Compact -->
             <div class="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
                 </div>
-                <div><h1 class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">NabiulWord</h1><p class="text-[10px] text-gray-500">Smart Notepad v1.0</p></div>
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">NabiulWord</h1>
+                    <p class="text-[10px] text-gray-500">Smart Notepad v1.0</p>
+                </div>
             </div>
+
+            <!-- Menu Items - Smart Grid -->
             <nav class="space-y-1 mb-6">
                 <button onclick="newDocument()" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
-                    <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30"><svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg></div><span class="text-sm">New Document</span>
+                    <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:bg-green-500/30">
+                        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm">New Document</span>
+                </button>
+                <button onclick="document.getElementById('imageInput').click(); closeSideMenu();" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/30">
+                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm">Insert Image</span>
                 </button>
                 <button onclick="document.getElementById('exportBtn').click(); closeSideMenu();" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30"><svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><span class="text-sm">Export as PDF</span>
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm">Export as PDF</span>
                 </button>
             </nav>
+
             <div class="border-t border-white/10 pt-4">
+                <!-- Font Size - Compact (global base font size slider) -->
                 <div class="mb-4 p-2 rounded-lg hover:bg-white/5 transition-all">
-                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2"><div class="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center"><span class="text-cyan-400 text-[10px] font-bold">Aa</span></div>Font Size<span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="fontSizeValue">12px</span></h3>
-                    <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">A</span><input type="range" id="fontSizeSlider" min="10" max="24" value="12" class="flex-grow h-1"><span class="text-sm font-bold text-gray-400">A</span></div>
+                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-cyan-500/20 flex items-center justify-center">
+                            <span class="text-cyan-400 text-[10px] font-bold">Aa</span>
+                        </div>
+                        Font Size
+                        <span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="fontSizeValue">14px</span>
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] text-gray-500">A</span>
+                        <input type="range" id="fontSizeSlider" min="10" max="24" value="14" class="flex-grow h-1">
+                        <span class="text-sm font-bold text-gray-400">A</span>
+                    </div>
                 </div>
+
+                <!-- Brightness - Compact -->
                 <div class="mb-4 p-2 rounded-lg hover:bg-white/5 transition-all">
-                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2"><div class="w-6 h-6 rounded bg-yellow-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></div>Brightness<span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="brightnessValue">100%</span></h3>
-                    <div class="flex items-center gap-2"><svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><input type="range" id="brightnessSlider" min="50" max="150" value="100" class="flex-grow h-1"><svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 7a5 5 0 100 10 5 5 0 000-10z"/></svg></div>
+                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-yellow-500/20 flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                        Brightness
+                        <span class="ml-auto text-[10px] bg-white/10 px-2 py-0.5 rounded" id="brightnessValue">100%</span>
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                        <input type="range" id="brightnessSlider" min="50" max="150" value="100" class="flex-grow h-1">
+                        <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 7a5 5 0 100 10 5 5 0 000-10z"/>
+                        </svg>
+                    </div>
                 </div>
+
+                <!-- PDF Options -->
+                <div class="mb-4">
+                    <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-all" onclick="togglePdfOptions()">
+                        <div class="w-6 h-6 rounded bg-emerald-500/20 flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <span>PDF Options</span>
+                        <svg id="pdfOptionsArrow" class="w-3 h-3 ml-auto transition-transform duration-300 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </h3>
+                    <div id="pdfOptionsContainer" class="hidden mt-2 px-2 space-y-3">
+                        <!-- Watermark Toggle -->
+                        <div class="flex items-center justify-between p-2.5 bg-white/5 rounded-lg">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded bg-blue-500/20 flex items-center justify-center">
+                                    <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xs text-gray-300">Watermark</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="watermarkToggle" class="sr-only peer" checked>
+                                <div class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                            </label>
+                        </div>
+                        <!-- Page Border Toggle -->
+                        <div class="flex items-center justify-between p-2.5 bg-white/5 rounded-lg">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded bg-orange-500/20 flex items-center justify-center">
+                                    <svg class="w-3.5 h-3.5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xs text-gray-300">Page Border</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="borderToggle" class="sr-only peer" checked>
+                                <div class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                            </label>
+                        </div>
+                        <p class="text-[9px] text-gray-500 text-center">These options apply to PDF export</p>
+                    </div>
+                </div>
+
+                <!-- Themes - Smart -->
                 <div class="mb-4">
                     <h3 class="text-xs font-semibold text-gray-400 mb-2 flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-all" onclick="toggleThemes()">
-                        <div class="w-6 h-6 rounded bg-pink-500/20 flex items-center justify-center"><svg class="w-3.5 h-3.5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg></div>Themes<svg id="themeArrow" class="w-3 h-3 ml-auto transition-transform duration-300 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <div class="w-6 h-6 rounded bg-pink-500/20 flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                            </svg>
+                        </div>
+                        <span>Themes</span>
+                        <svg id="themeArrow" class="w-3 h-3 ml-auto transition-transform duration-300 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
                     </h3>
                     <div id="themesContainer" class="hidden grid grid-cols-5 gap-2 mt-2 px-2">
                         <div class="theme-card w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 shadow-md cursor-pointer hover:scale-110 transition-transform" onclick="setTheme('default')" title="Default"></div>
@@ -265,9 +1782,19 @@
                         <div class="theme-card w-9 h-9 rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 shadow-md cursor-pointer hover:scale-110 transition-transform" onclick="setTheme('rose')" title="Rose"></div>
                     </div>
                 </div>
+
+                <!-- About Developer -->
                 <div>
                     <h3 class="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white/5 transition-all" onclick="toggleAbout()">
-                        <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center"><svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>About Developer<svg id="aboutArrow" class="w-4 h-4 ml-auto transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                        <div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
+                        <span>About Developer</span>
+                        <svg id="aboutArrow" class="w-4 h-4 ml-auto transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
                     </h3>
                     <div id="aboutContainer" class="hidden">
                         <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-xl p-4 text-center border border-white/5">
@@ -277,6 +1804,44 @@
                             </div>
                             <h4 class="font-bold text-base mb-0.5 text-white">Nabiul Hasan</h4>
                             <p class="text-[10px] text-indigo-400 mb-3 font-medium">Developer & Designer</p>
+                            <div class="text-left text-[11px] space-y-2 max-h-52 overflow-y-auto pr-1">
+                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-indigo-500">
+                                    <h5 class="font-semibold text-indigo-400 mb-1.5 text-xs">📚 Academic Qualification</h5>
+                                    <ul class="space-y-0.5 text-gray-300">
+                                        <li>• B.A in Arabic</li>
+                                        <li>• M.A in Arabic</li>
+                                        <li>• B.A in English</li>
+                                        <li>• M.A in English</li>
+                                        <li>• B.Ed</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-green-500">
+                                    <h5 class="font-semibold text-green-400 mb-1.5 text-xs">💊 Other Qualification</h5>
+                                    <p class="text-gray-300">Diploma in Pharmacy</p>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-amber-500">
+                                    <h5 class="font-semibold text-amber-400 mb-1.5 text-xs">☪️ Islamic Qualification</h5>
+                                    <ul class="space-y-0.5 text-gray-300">
+                                        <li>• Hafiz E Quran</li>
+                                        <li>• Maulana (Alim)</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-white/5 rounded-lg p-2.5 border-l-2 border-rose-500">
+                                    <h5 class="font-semibold text-rose-400 mb-1.5 text-xs">🎓 Additional Qualification</h5>
+                                    <ol class="space-y-0.5 text-gray-300 list-decimal list-inside">
+                                        <li>Certificate in Desktop Publishing</li>
+                                        <li>Diploma In ICT</li>
+                                        <li>Certificate in Client Server Technology</li>
+                                        <li>Diploma in Financial Accounting</li>
+                                        <li>Certificate in Web Designing</li>
+                                        <li>Diploma in Multimedia & Animation</li>
+                                        <li>Diploma in TALLY ERP9</li>
+                                        <li>Advance Diploma in AutoCAD</li>
+                                        <li>Advance Diploma in Software App</li>
+                                        <li>Advance Diploma in Computer Training</li>
+                                    </ol>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -284,12 +1849,16 @@
         </div>
     </div>
 
+    <!-- Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black/60 z-40 hidden"></div>
-    <div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 opacity-0 transition-all duration-300 translate-y-10">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 opacity-0 transition-all duration-300 translate-y-10">
         <span id="toastMessage">Saved successfully!</span>
     </div>
 
     <script>
+        // DOM Elements
         const editor = document.getElementById('editor');
         const sideMenu = document.getElementById('sideMenu');
         const overlay = document.getElementById('overlay');
@@ -297,146 +1866,2045 @@
         const fontSizeSlider = document.getElementById('fontSizeSlider');
         const brightnessSlider = document.getElementById('brightnessSlider');
         const exportBtn = document.getElementById('exportBtn');
+        const imageInput = document.getElementById('imageInput');
+        const pageContainer = document.getElementById('pageContainer');
+        const pagesWrapper = document.getElementById('pagesWrapper');
+        const toolbarFontSize = document.getElementById('toolbarFontSize');
+        const defaultFontSizeInput = document.getElementById('defaultFontSize');
+        const toolbar = document.getElementById('toolbar');
+        
+        // Page management variables
+        let totalPages = 1;
+        const PAGE_HEIGHT_MM = 297;
+        const PAGE_PADDING_MM = 30;
+        const CONTENT_HEIGHT_MM = PAGE_HEIGHT_MM - PAGE_PADDING_MM;
+        const MM_TO_PX = 3.7795275591; // 1mm = 3.78px at 96dpi
+        const PAGE_CONTENT_HEIGHT_PX = CONTENT_HEIGHT_MM * MM_TO_PX;
+        
+        // Selection storage for font-size dropdown
+        let fontSizeSelection = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedContent();
+            updateWordCount();
+            loadSettings();
+            initToolbarDrag();
+            initPersistentSelection();
+            setTimeout(updatePages, 100);
+        });
+        
+        // Allow paste with formatting
+        editor.addEventListener('paste', (e) => {
+            // Allow default paste behavior to preserve formatting
+            setTimeout(() => {
+                updatePages();
+            }, 100);
+        });
+        
+        // Auto-save
         let saveTimeout;
-        let savedSelection = null;
-
-        document.addEventListener('DOMContentLoaded', () => { loadSavedContent(); updateWordCount(); loadSettings(); });
-        editor.addEventListener('paste', (e) => {});
+        let pageUpdateTimeout;
         editor.addEventListener('input', () => {
-            updateWordCount(); updatePageCount(); clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => { localStorage.setItem('nabiulword_content', editor.innerHTML); showToast('Auto-saved!'); }, 2000);
+            updateWordCount();
+            
+            // Debounced page update
+            clearTimeout(pageUpdateTimeout);
+            pageUpdateTimeout = setTimeout(() => {
+                updatePages();
+            }, 150);
+            
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('nabiulword_content', editor.innerHTML);
+                showToast('Auto-saved!');
+            }, 2000);
+        });
+        
+        // Update pages based on content height
+        function updatePages() {
+            const editorElement = document.getElementById('editor');
+            if (!editorElement) return;
+            
+            // Get the actual content height
+            const contentHeight = editorElement.scrollHeight;
+            
+            // Calculate how many pages are needed (A4 content area height in pixels)
+            const pageContentHeightPx = (297 - 30) * 3.78; // ~1010px per page
+            const neededPages = Math.max(1, Math.ceil(contentHeight / pageContentHeightPx));
+            
+            // Update total pages count
+            if (neededPages !== totalPages) {
+                totalPages = neededPages;
+            }
+            
+            updatePageInfo();
+            updateVisualPageBreaks();
+        }
+        
+        // Update visual page break indicators
+        function updateVisualPageBreaks() {
+            const editorElement = document.getElementById('editor');
+            const pageContainer = document.getElementById('pageContainer');
+            if (!editorElement || !pageContainer) return;
+            
+            // Remove old page break lines
+            document.querySelectorAll('.page-break-line').forEach(el => el.remove());
+            
+            // A4 content area height
+            const pageContentHeightPx = (297 - 30) * 3.78; // ~1010px
+            
+            // Add visual page break lines
+            for (let i = 1; i < totalPages; i++) {
+                const breakLine = document.createElement('div');
+                breakLine.className = 'page-break-line';
+                breakLine.style.cssText = `
+                    position: absolute;
+                    left: 8mm;
+                    right: 8mm;
+                    top: ${9 + (pageContentHeightPx * i / 3.78)}mm;
+                    height: 3px;
+                    background: repeating-linear-gradient(90deg, #6366f1 0px, #6366f1 10px, transparent 10px, transparent 20px);
+                    z-index: 5;
+                    pointer-events: none;
+                `;
+                
+                // Add page number indicator
+                const pageLabel = document.createElement('span');
+                pageLabel.style.cssText = `
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    top: -10px;
+                    background: #1e293b;
+                    color: #6366f1;
+                    padding: 2px 12px;
+                    border-radius: 10px;
+                    font-size: 10px;
+                    border: 1px dashed #6366f1;
+                    white-space: nowrap;
+                `;
+                pageLabel.textContent = `📄 End of Page ${i}`;
+                breakLine.appendChild(pageLabel);
+                
+                pageContainer.appendChild(breakLine);
+            }
+        }
+        
+        // Render pages - simplified single continuous editor
+        function renderPages() {
+            // Just update page info and visual breaks
+            updatePageInfo();
+            updateVisualPageBreaks();
+        }
+        
+        // Update page info in status bar
+        function updatePageInfo() {
+            const pageInfoEl = document.getElementById('pageInfo');
+            if (pageInfoEl) {
+                pageInfoEl.textContent = `Page 1 of ${totalPages}`;
+            }
+            
+            // Update page number on document
+            const pageNumSpan = document.querySelector('.page-number');
+            if (pageNumSpan) {
+                if (totalPages === 1) {
+                    pageNumSpan.innerHTML = `Page <span class="page-num">1</span>`;
+                } else {
+                    pageNumSpan.innerHTML = `Total Pages: <span class="page-num">${totalPages}</span>`;
+                }
+            }
+        }
+        
+        // Load saved content
+        function loadSavedContent() {
+            const saved = localStorage.getItem('nabiulword_content');
+            if (saved) {
+                const editorEl = document.getElementById('editor');
+                if (editorEl) editorEl.innerHTML = saved;
+            }
+            setTimeout(updatePages, 200);
+        }
+        
+        // Word count
+        function updateWordCount() {
+            const editorEl = document.getElementById('editor');
+            if (!editorEl) return;
+            const text = editorEl.innerText || '';
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const chars = text.length;
+            document.getElementById('wordCount').textContent = `Words: ${words} | Characters: ${chars}`;
+        }
+        
+        // Format commands - uses persistent selection
+        function formatText(command) {
+            // Restore selection before applying format
+            if (restoreSelection()) {
+                document.execCommand(command, false, null);
+                // Re-save selection after formatting
+                setTimeout(savePersistentSelection, 10);
+            } else {
+                document.execCommand(command, false, null);
+            }
+            const editorEl = document.getElementById('editor');
+            if (editorEl) editorEl.focus();
+        }
+        
+        // Default Font Size (Global) - number input in toolbar
+        defaultFontSizeInput.addEventListener('change', (e) => {
+            let size = parseInt(e.target.value, 10);
+            if (isNaN(size)) return;
+            if (size < 8) size = 8;
+            if (size > 48) size = 48;
+            e.target.value = size;
+
+            const editorEl = document.getElementById('editor');
+            if (editorEl) editorEl.style.fontSize = size + 'px';
+            document.getElementById('fontSizeValue').textContent = size + 'px';
+
+            // sync side menu slider if in range
+            if (size >= parseInt(fontSizeSlider.min) && size <= parseInt(fontSizeSlider.max)) {
+                fontSizeSlider.value = size;
+            }
+
+            localStorage.setItem('nabiulword_fontSize', size);
+            showToast(`Default font size set to ${size}px`);
+            setTimeout(updatePages, 100);
+        });
+        
+        // Save selection when toolbar font-size dropdown is focused
+        toolbarFontSize.addEventListener('focus', () => {
+            // Use persistent selection if current selection is collapsed
+            const activeSelection = getActiveSelection();
+            if (activeSelection) {
+                fontSizeSelection = activeSelection;
+            }
         });
 
-        function loadSavedContent() { const saved = localStorage.getItem('nabiulword_content'); if (saved) editor.innerHTML = saved; updatePageCount(); }
-        function updateWordCount() { const text = editor.innerText || ''; const words = text.trim() ? text.trim().split(/\s+/).length : 0; document.getElementById('wordCount').textContent = `Words: ${words} | Characters: ${text.length}`; }
-        function updatePageCount() { const pages = Math.max(1, Math.ceil(editor.scrollHeight / (257 * 3.78))); document.getElementById('currentPage').textContent = pages; }
-        function formatText(command) { document.execCommand(command, false, null); editor.focus(); }
-        
-        function changeSelectedFontSize(delta) {
+        // Selected Text Font Size Dropdown - uses persistent selection
+        toolbarFontSize.addEventListener('change', (e) => {
+            const value = e.target.value;
+            if (!value) return;
+
+            // Use fontSizeSelection or persistent selection
+            const selectionToUse = fontSizeSelection || getActiveSelection();
+            
+            if (!selectionToUse) {
+                showToast('Please select some text first!');
+                e.target.value = '';
+                return;
+            }
+
             const selection = window.getSelection();
-            if (!selection.rangeCount || selection.isCollapsed) { showToast('Please select some text first!'); return; }
+            selection.removeAllRanges();
+            selection.addRange(selectionToUse);
+
+            const editorEl = document.getElementById('editor');
             const range = selection.getRangeAt(0);
-            let currentSize = parseInt(window.getComputedStyle(range.startContainer.parentElement).fontSize) || 12;
-            let newSize = Math.max(8, Math.min(72, currentSize + (delta * 4)));
-            document.execCommand('fontSize', false, '7');
-            editor.querySelectorAll('font[size="7"]').forEach(el => { el.removeAttribute('size'); el.style.fontSize = newSize + 'px'; });
-            showToast(`Font size: ${newSize}px`); editor.focus();
+            if (range.collapsed || !editorEl || !editorEl.contains(range.commonAncestorContainer)) {
+                showToast('Please select some text first!');
+                e.target.value = '';
+                fontSizeSelection = null;
+                return;
+            }
+
+            const span = document.createElement('span');
+            span.style.fontSize = value + 'px';
+            span.appendChild(range.extractContents());
+            range.insertNode(span);
+
+            // Keep selection on the newly styled text
+            const newRange = document.createRange();
+            newRange.selectNodeContents(span);
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+            
+            // Update persistent selection
+            setTimeout(savePersistentSelection, 10);
+            
+            fontSizeSelection = null;
+            e.target.value = '';
+            showToast(`Selected text font size: ${value}px`);
+            setTimeout(updatePages, 100);
+        });
+        
+        // New document
+        function newDocument() {
+            if (confirm('Create a new document? Current content will be cleared.')) {
+                const editorEl = document.getElementById('editor');
+                if (editorEl) editorEl.innerHTML = '';
+                const images = document.querySelectorAll('.draggable-image-container');
+                images.forEach(img => img.remove());
+                document.querySelectorAll('.page-break-line').forEach(el => el.remove());
+                localStorage.removeItem('nabiulword_content');
+                localStorage.removeItem('nabiulword_images');
+                totalPages = 1;
+                updatePageInfo();
+                showToast('New document created!');
+                updateWordCount();
+                closeSideMenu();
+            }
         }
-
-        function newDocument() { if (confirm('Create new doc?')) { editor.innerHTML = ''; localStorage.removeItem('nabiulword_content'); showToast('New document created!'); updateWordCount(); closeSideMenu(); } }
-        function clearEditor() { if (confirm('Clear all?')) { editor.innerHTML = ''; localStorage.removeItem('nabiulword_content'); showToast('Cleared!'); updateWordCount(); } }
-
-        // --- ULTIMATE FIX PDF EXPORT ---
+        
+        // Clear editor - Reset font size to default 14
+        function clearEditor() {
+            if (confirm('Are you sure you want to clear all content?')) {
+                const editorEl = document.getElementById('editor');
+                if (editorEl) editorEl.innerHTML = '';
+                const images = document.querySelectorAll('.draggable-image-container');
+                images.forEach(img => img.remove());
+                document.querySelectorAll('.page-break-line').forEach(el => el.remove());
+                localStorage.removeItem('nabiulword_content');
+                localStorage.removeItem('nabiulword_images');
+                
+                const defaultSize = 14;
+                if (editorEl) editorEl.style.fontSize = defaultSize + 'px';
+                defaultFontSizeInput.value = defaultSize;
+                fontSizeSlider.value = defaultSize;
+                document.getElementById('fontSizeValue').textContent = defaultSize + 'px';
+                localStorage.setItem('nabiulword_fontSize', defaultSize);
+                
+                totalPages = 1;
+                updatePageInfo();
+                showToast('Content cleared! Font size reset to 14px');
+                updateWordCount();
+            }
+        }
+        
+        // Generate Smart PDF Filename based on content
+        function generateSmartPdfName() {
+            const editorEl = document.getElementById('editor');
+            const text = editorEl ? editorEl.innerText : '';
+            
+            if (!text.trim()) {
+                return 'NabiulWord_Empty_Document';
+            }
+            
+            let firstLine = text.trim().split('\n')[0].trim();
+            let cleanText = firstLine.replace(/[^\w\s\u0980-\u09FF]/g, '').trim();
+            
+            if (cleanText.length > 40) {
+                cleanText = cleanText.substring(0, 40);
+            }
+            
+            if (cleanText.length < 5) {
+                cleanText = text.trim().substring(0, 40).replace(/[^\w\s\u0980-\u09FF]/g, '').trim();
+            }
+            
+            cleanText = cleanText.replace(/\s+/g, '_');
+            
+            if (!cleanText) {
+                cleanText = 'Document';
+            }
+            
+            const date = new Date();
+            const dateStr = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}`;
+            
+            return `${cleanText}_${dateStr}`;
+        }
+        
+        // Export PDF with smart naming
         exportBtn.addEventListener('click', async () => {
-            const content = editor.innerHTML;
-            if (!content.trim()) { showToast('Please add content!'); return; }
-
+            const editorEl = document.getElementById('editor');
+            const content = editorEl ? editorEl.innerHTML : '';
+            if (!content.trim() && document.querySelectorAll('.draggable-image-container').length === 0) {
+                showToast('Please add some content first!');
+                return;
+            }
+            
+            const smartFilename = generateSmartPdfName();
+            const currentBaseFontSize = editorEl ? window.getComputedStyle(editorEl).fontSize : '14px';
+            const numericBaseFont = parseInt(currentBaseFontSize, 10) || 14;
+            
             const pdfContainer = document.createElement('div');
-            pdfContainer.style.cssText = 'width: 200mm; font-family: Times New Roman, serif; color: #1a1a1a; background: white; font-size: 12px; line-height: 1.6; text-align: justify;';
+            pdfContainer.style.cssText = `font-family: Times New Roman, serif; color: #000000; background: white; padding: 8mm 7mm 12mm 7mm; font-size: ${numericBaseFont}px; line-height: 1.4; text-align: justify; position: relative;`;
             
             const style = document.createElement('style');
             style.textContent = `
-                /* HARDCORE FIX FOR LINE CUTTING */
-                p, div, li, h1, h2, h3, h4, h5, h6, tr, td, table {
+                * {
+                    box-sizing: border-box;
+                }
+                p, div, span, li, h1, h2, h3, h4, h5, h6, tr, td, table, ul, ol {
                     page-break-inside: avoid !important;
                     break-inside: avoid !important;
-                    display: block; 
-                    margin-bottom: 5px;
-                    padding-bottom: 2px; /* Safety buffer for letters like g, y, j */
+                    orphans: 4 !important;
+                    widows: 4 !important;
+                    display: block;
                 }
-                span, a, strong, b, i, u { display: inline !important; }
-                img { max-width: 100%; height: auto; page-break-inside: avoid; }
+                p { 
+                    margin-bottom: 0.3em !important; 
+                    margin-top: 0 !important;
+                    padding-bottom: 2px !important;
+                }
+                br {
+                    line-height: 1.3 !important;
+                    display: block;
+                    content: "";
+                    margin-top: 0.2em;
+                }
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    line-height: 1.6 !important;
+                }
+                div, p, span {
+                    padding-bottom: 1px !important;
+                }
+                .pdf-image {
+                    page-break-inside: avoid !important;
+                }
             `;
             pdfContainer.appendChild(style);
-
+            
             const contentDiv = document.createElement('div');
             contentDiv.innerHTML = content;
+            
+            const images = document.querySelectorAll('.draggable-image-container');
+            images.forEach(imgContainer => {
+                const img = imgContainer.querySelector('img');
+                if (img) {
+                    const imgClone = document.createElement('img');
+                    imgClone.src = img.src;
+                    imgClone.style.cssText = `
+                        position: absolute;
+                        left: ${imgContainer.style.left};
+                        top: ${imgContainer.style.top};
+                        width: ${imgContainer.style.width};
+                        height: ${imgContainer.style.height};
+                        transform: ${imgContainer.style.transform};
+                    `;
+                    imgClone.className = 'pdf-image';
+                    contentDiv.appendChild(imgClone);
+                }
+            });
+            
             pdfContainer.appendChild(contentDiv);
-
+            
             const opt = {
-                // Increased bottom margin to 20mm to act as a safety buffer
-                margin: [10, 10, 20, 10], 
-                filename: 'NabiulWord_Document.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                // Use 'avoid-all' mode which forces element move if it doesn't fit
+                margin: [10, 8, 15, 8],
+                filename: `${smartFilename}.pdf`,
+                image: { type: 'jpeg', quality: 0.95 },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, logging: false, backgroundColor: '#ffffff' },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
                 pagebreak: { 
                     mode: ['avoid-all', 'css', 'legacy'],
+                    before: '.page-break-before',
+                    after: '.page-break-after',
+                    avoid: ['p', 'div', 'span', 'li', 'tr', 'td', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'table', 'ul', 'ol', '.pdf-image']
                 }
             };
-
+            
             showToast('Generating PDF...');
+            
             try {
                 const pdf = await html2pdf().set(opt).from(pdfContainer).toPdf().get('pdf');
-                const totalPages = pdf.internal.getNumberOfPages();
-                for (let i = 1; i <= totalPages; i++) {
+                
+                const pdfTotalPages = pdf.internal.getNumberOfPages();
+                const showWatermark = document.getElementById('watermarkToggle').checked;
+                const showBorder = document.getElementById('borderToggle').checked;
+                
+                for (let i = 1; i <= pdfTotalPages; i++) {
                     pdf.setPage(i);
-                    // Borders
-                    pdf.setDrawColor(0, 0, 0); pdf.setLineWidth(0.8); pdf.rect(5, 5, 200, 287);
-                    pdf.setDrawColor(51, 51, 51); pdf.setLineWidth(0.3); pdf.rect(6.5, 6.5, 197, 284);
-                    // Page Number
-                    pdf.setFontSize(9); pdf.setTextColor(0);
-                    pdf.text(`Page ${i} of ${totalPages}`, 105, 289, { align: 'center' });
-                    // Watermark
-                    try {
-                        const wImg = document.querySelector('.watermark img');
-                        if (wImg && wImg.src && !wImg.src.includes('data:')) {
-                            pdf.setGState(new pdf.GState({opacity: 0.3}));
-                            pdf.addImage(wImg.src, 'PNG', 162, 247, 38, 38, '', 'FAST', 0);
-                            pdf.setGState(new pdf.GState({opacity: 1}));
-                        }
-                    } catch(e) {}
+                    
+                    // Add border if enabled
+                    if (showBorder) {
+                        pdf.setDrawColor(0, 0, 0);
+                        pdf.setLineWidth(0.8);
+                        pdf.rect(5, 5, 200, 287);
+                        
+                        pdf.setDrawColor(51, 51, 51);
+                        pdf.setLineWidth(0.3);
+                        pdf.rect(6.5, 6.5, 197, 284);
+                    }
+                    
+                    pdf.setFontSize(9);
+                    pdf.setTextColor(0);
+                    pdf.text(`Page ${i}`, 105, 289, { align: 'center' });
+                    
+                    // Add watermark if enabled
+                    if (showWatermark) {
+                        try {
+                            const watermarkImg = document.querySelector('.watermark img');
+                            if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
+                                pdf.setGState(new pdf.GState({opacity: 0.35}));
+                                pdf.addImage(watermarkImg.src, 'PNG', 158, 243, 38.1, 38.1, '', 'FAST', 0);
+                                pdf.setGState(new pdf.GState({opacity: 1}));
+                            }
+                        } catch(err) {}
+                    }
                 }
-                pdf.save('NabiulWord_Document.pdf');
-                showToast('Exported!');
-            } catch (e) { showToast('Error!'); console.error(e); }
+                
+                pdf.save(`${smartFilename}.pdf`);
+                showToast(`PDF exported: ${smartFilename}.pdf`);
+            } catch (e) {
+                showToast('Error generating PDF!');
+                console.error(e);
+            }
         });
-
+        
+        // Side Menu Toggle
         hamburgerBtn.addEventListener('click', () => {
             hamburgerBtn.classList.toggle('active');
-            if (sideMenu.classList.contains('-translate-x-full')) { sideMenu.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); }
-            else closeSideMenu();
+            if (sideMenu.classList.contains('-translate-x-full')) {
+                sideMenu.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                closeSideMenu();
+            }
         });
-        function closeSideMenu() { sideMenu.classList.add('-translate-x-full'); overlay.classList.add('hidden'); hamburgerBtn.classList.remove('active'); }
+        
+        function closeSideMenu() {
+            sideMenu.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+            hamburgerBtn.classList.remove('active');
+        }
+        
         overlay.addEventListener('click', closeSideMenu);
         
-        fontSizeSlider.addEventListener('input', (e) => { editor.style.fontSize = e.target.value + 'px'; document.getElementById('fontSizeValue').textContent = e.target.value + 'px'; localStorage.setItem('nabiulword_fontSize', e.target.value); });
-        brightnessSlider.addEventListener('input', (e) => { document.documentElement.style.setProperty('--brightness', e.target.value / 100); document.getElementById('brightnessValue').textContent = e.target.value + '%'; localStorage.setItem('nabiulword_brightness', e.target.value); });
+        // Font Size (Side Menu Slider) - Global base font size only
+        fontSizeSlider.addEventListener('input', (e) => {
+            const size = e.target.value;
+            const editorEl = document.getElementById('editor');
+            if (editorEl) editorEl.style.fontSize = size + 'px';
+            document.getElementById('fontSizeValue').textContent = size + 'px';
+            defaultFontSizeInput.value = size;
+            localStorage.setItem('nabiulword_fontSize', size);
+            setTimeout(updatePages, 100);
+        });
         
-        function toggleThemes() { document.getElementById('themesContainer').classList.toggle('hidden'); document.getElementById('themeArrow').style.transform = document.getElementById('themesContainer').classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)'; }
-        function setTheme(theme) { document.body.className = theme === 'default' ? '' : `theme-${theme}`; localStorage.setItem('nabiulword_theme', theme); showToast('Theme applied!'); }
-        function toggleAbout() { document.getElementById('aboutContainer').classList.toggle('hidden'); document.getElementById('aboutArrow').style.transform = document.getElementById('aboutContainer').classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)'; }
+        // Brightness
+        brightnessSlider.addEventListener('input', (e) => {
+            const brightness = e.target.value;
+            document.documentElement.style.setProperty('--brightness', brightness / 100);
+            document.getElementById('brightnessValue').textContent = brightness + '%';
+            localStorage.setItem('nabiulword_brightness', brightness);
+        });
         
+        // Themes
+        function toggleThemes() {
+            const container = document.getElementById('themesContainer');
+            const arrow = document.getElementById('themeArrow');
+            container.classList.toggle('hidden');
+            arrow.style.transform = container.classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)';
+        }
+        
+        function setTheme(theme) {
+            document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+            localStorage.setItem('nabiulword_theme', theme);
+            showToast(`${theme.charAt(0).toUpperCase() + theme.slice(1)} theme applied!`);
+        }
+        
+        // About
+        function toggleAbout() {
+            const container = document.getElementById('aboutContainer');
+            const arrow = document.getElementById('aboutArrow');
+            container.classList.toggle('hidden');
+            arrow.style.transform = container.classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)';
+        }
+        
+        // PDF Options Toggle
+        function togglePdfOptions() {
+            const container = document.getElementById('pdfOptionsContainer');
+            const arrow = document.getElementById('pdfOptionsArrow');
+            container.classList.toggle('hidden');
+            arrow.style.transform = container.classList.contains('hidden') ? 'rotate(0)' : 'rotate(180deg)';
+        }
+        
+        // Load Settings
         function loadSettings() {
-            const fs = localStorage.getItem('nabiulword_fontSize') || 12;
-            const br = localStorage.getItem('nabiulword_brightness') || 100;
-            const th = localStorage.getItem('nabiulword_theme') || 'default';
-            fontSizeSlider.value = fs; editor.style.fontSize = fs + 'px'; document.getElementById('fontSizeValue').textContent = fs + 'px';
-            brightnessSlider.value = br; document.documentElement.style.setProperty('--brightness', br / 100); document.getElementById('brightnessValue').textContent = br + '%';
-            if (th !== 'default') document.body.className = `theme-${th}`;
+            const fontSize = localStorage.getItem('nabiulword_fontSize') || 14;
+            const brightness = localStorage.getItem('nabiulword_brightness') || 100;
+            const theme = localStorage.getItem('nabiulword_theme') || 'default';
+            const toolbarPosition = JSON.parse(localStorage.getItem('nabiulword_toolbar_position') || 'null');
+            const watermarkEnabled = localStorage.getItem('nabiulword_watermark') !== 'false';
+            const borderEnabled = localStorage.getItem('nabiulword_border') !== 'false';
+            
+            fontSizeSlider.value = fontSize;
+            const editorEl = document.getElementById('editor');
+            if (editorEl) editorEl.style.fontSize = fontSize + 'px';
+            document.getElementById('fontSizeValue').textContent = fontSize + 'px';
+            defaultFontSizeInput.value = fontSize;
+            
+            brightnessSlider.value = brightness;
+            document.documentElement.style.setProperty('--brightness', brightness / 100);
+            document.getElementById('brightnessValue').textContent = brightness + '%';
+            
+            if (theme !== 'default') {
+                document.body.className = `theme-${theme}`;
+            }
+
+            if (toolbarPosition && typeof toolbarPosition.top === 'number' && typeof toolbarPosition.left === 'number') {
+                toolbar.style.top = toolbarPosition.top + 'px';
+                toolbar.style.left = toolbarPosition.left + 'px';
+                toolbar.style.transform = 'translate(0, 0)';
+                if (toolbarPosition.customPositioned) {
+                    isToolbarCustomPositioned = true;
+                }
+            }
+            
+            // Load PDF Options
+            document.getElementById('watermarkToggle').checked = watermarkEnabled;
+            document.getElementById('borderToggle').checked = borderEnabled;
         }
         
-        function showToast(msg) {
-            const t = document.getElementById('toast'); document.getElementById('toastMessage').textContent = msg;
-            t.classList.remove('opacity-0', 'translate-y-10'); t.classList.add('opacity-100', 'translate-y-0');
-            setTimeout(() => { t.classList.add('opacity-0', 'translate-y-10'); t.classList.remove('opacity-100', 'translate-y-0'); }, 3000);
-        }
+        // Save PDF Options when changed
+        document.getElementById('watermarkToggle').addEventListener('change', (e) => {
+            localStorage.setItem('nabiulword_watermark', e.target.checked);
+            showToast(e.target.checked ? 'Watermark enabled' : 'Watermark disabled');
+        });
         
-        function saveSelection() { const sel = window.getSelection(); if (sel.rangeCount > 0) savedSelection = sel.getRangeAt(0).cloneRange(); }
-        function restoreSelection() { if (savedSelection) { const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(savedSelection); } }
-        function toggleColorPicker() { saveSelection(); document.getElementById('colorDropdown').classList.toggle('show'); }
-        function applyColor(color) {
-            restoreSelection();
+        document.getElementById('borderToggle').addEventListener('change', (e) => {
+            localStorage.setItem('nabiulword_border', e.target.checked);
+            showToast(e.target.checked ? 'Page border enabled' : 'Page border disabled');
+        });
+        
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-10');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
             setTimeout(() => {
-                const sel = window.getSelection();
-                if (!savedSelection || sel.isCollapsed) { showToast('Select text first!'); document.getElementById('colorDropdown').classList.remove('show'); return; }
-                document.execCommand('styleWithCSS', false, true); document.execCommand('foreColor', false, color);
-                document.getElementById('colorDropdown').classList.remove('show'); savedSelection = null; editor.focus();
+                toast.classList.add('opacity-0', 'translate-y-10');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+        
+        // Persistent selection storage for all toolbar operations
+        let savedSelection = null;
+        let persistentSelection = null;
+        
+        // Save selection whenever user selects text in editor
+        function initPersistentSelection() {
+            const editorEl = document.getElementById('editor');
+            if (!editorEl) return;
+            
+            // Save selection on mouseup (after text selection)
+            editorEl.addEventListener('mouseup', () => {
+                setTimeout(savePersistentSelection, 10);
+                setTimeout(updateToolbarPosition, 20);
+            });
+            
+            // Save selection on keyup (for keyboard selection)
+            editorEl.addEventListener('keyup', (e) => {
+                if (e.shiftKey || e.key === 'Shift') {
+                    setTimeout(savePersistentSelection, 10);
+                    setTimeout(updateToolbarPosition, 20);
+                }
+            });
+            
+            // Save on touch end for mobile
+            editorEl.addEventListener('touchend', () => {
+                setTimeout(savePersistentSelection, 50);
+                setTimeout(updateToolbarPosition, 60);
+            });
+            
+            // Reset toolbar position when clicking outside editor
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#editor') && !e.target.closest('.toolbar')) {
+                    resetToolbarPosition();
+                }
+            });
+        }
+        
+        // Update toolbar position based on selection
+        function updateToolbarPosition() {
+            if (isToolbarCustomPositioned) return; // Don't move if user positioned it
+            
+            const selection = window.getSelection();
+            const editorEl = document.getElementById('editor');
+            
+            if (!selection || selection.rangeCount === 0 || !editorEl) return;
+            
+            const range = selection.getRangeAt(0);
+            if (range.collapsed || !editorEl.contains(range.commonAncestorContainer)) {
+                resetToolbarPosition();
+                return;
+            }
+            
+            // Get selection position
+            const rect = range.getBoundingClientRect();
+            const toolbarHeight = toolbar.offsetHeight;
+            const viewportHeight = window.innerHeight;
+            
+            // If selection is in lower half of screen, move toolbar to bottom
+            if (rect.bottom > viewportHeight / 2) {
+                toolbar.classList.add('toolbar-bottom');
+            } else {
+                toolbar.classList.remove('toolbar-bottom');
+            }
+        }
+        
+        function resetToolbarPosition() {
+            if (isToolbarCustomPositioned) return;
+            toolbar.classList.remove('toolbar-bottom');
+        }
+        
+        function savePersistentSelection() {
+            const selection = window.getSelection();
+            const editorEl = document.getElementById('editor');
+            if (selection && selection.rangeCount > 0 && editorEl) {
+                const range = selection.getRangeAt(0);
+                if (!range.collapsed && editorEl.contains(range.commonAncestorContainer)) {
+                    persistentSelection = range.cloneRange();
+                    savedSelection = range.cloneRange();
+                }
+            }
+        }
+        
+        function saveSelection() {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                savedSelection = selection.getRangeAt(0).cloneRange();
+            }
+            // Also use persistent selection if available
+            if (!savedSelection && persistentSelection) {
+                savedSelection = persistentSelection.cloneRange();
+            }
+        }
+        
+        function restoreSelection() {
+            // First try savedSelection, then persistentSelection
+            const selectionToRestore = savedSelection || persistentSelection;
+            if (selectionToRestore) {
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(selectionToRestore.cloneRange());
+                return true;
+            }
+            return false;
+        }
+        
+        function getActiveSelection() {
+            // Return the best available selection
+            const selection = window.getSelection();
+            const editorEl = document.getElementById('editor');
+            
+            // Check current selection first
+            if (selection && selection.rangeCount > 0 && editorEl) {
+                const range = selection.getRangeAt(0);
+                if (!range.collapsed && editorEl.contains(range.commonAncestorContainer)) {
+                    return range.cloneRange();
+                }
+            }
+            
+            // Fall back to persistent selection
+            if (persistentSelection) {
+                return persistentSelection.cloneRange();
+            }
+            
+            return null;
+        }
+        
+        function toggleColorPicker() {
+            saveSelection();
+            const dropdown = document.getElementById('colorDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        // Apply color to selected text - Uses persistent selection
+        function applyColor(color) {
+            // Try to restore selection (uses persistent if saved not available)
+            const restored = restoreSelection();
+            
+            setTimeout(() => {
+                const selection = window.getSelection();
+                const editorEl = document.getElementById('editor');
+
+                // Check if we have any valid selection
+                const activeSelection = getActiveSelection();
+                if (!activeSelection && !restored) {
+                    showToast('Please select some text first!');
+                    document.getElementById('colorDropdown').classList.remove('show');
+                    return;
+                }
+
+                // Restore selection again to ensure it's active
+                if (activeSelection) {
+                    selection.removeAllRanges();
+                    selection.addRange(activeSelection);
+                }
+
+                const range = selection.getRangeAt(0);
+                if (range.collapsed || !editorEl || !editorEl.contains(range.commonAncestorContainer)) {
+                    showToast('Please select some text first!');
+                    document.getElementById('colorDropdown').classList.remove('show');
+                    return;
+                }
+
+                document.execCommand('styleWithCSS', false, true);
+                const result = document.execCommand('foreColor', false, color);
+
+                if (result) {
+                    showToast('Color applied!');
+                    // Re-save selection after color change
+                    setTimeout(savePersistentSelection, 10);
+                } else {
+                    showToast('Color change failed!');
+                }
+
+                document.getElementById('colorDropdown').classList.remove('show');
+                editorEl.focus();
             }, 10);
         }
-        function alignText(a) { editor.focus(); document.execCommand(a, false, null); }
-        document.addEventListener('click', (e) => { if (!document.getElementById('colorDropdown').contains(e.target) && !document.getElementById('colorPickerBtn').contains(e.target)) document.getElementById('colorDropdown').classList.remove('show'); });
+        
+        // Text Alignment Function - Uses persistent selection
+        function alignText(alignment) {
+            const editorEl = document.getElementById('editor');
+            
+            // Restore selection before aligning
+            restoreSelection();
+            
+            if (editorEl) editorEl.focus();
+            document.execCommand(alignment, false, null);
+            
+            // Re-save selection after alignment
+            setTimeout(savePersistentSelection, 10);
+            
+            const alignNames = {
+                'justifyLeft': 'Left',
+                'justifyCenter': 'Center',
+                'justifyRight': 'Right',
+                'justifyFull': 'Justify'
+            };
+            
+            showToast(`Aligned: ${alignNames[alignment]}`);
+        }
+        
+        // Close color picker when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('colorDropdown');
+            const btn = document.getElementById('colorPickerBtn');
+            if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        // =============== CUSTOM FONT FUNCTIONALITY ===============
+        
+        let customFonts = JSON.parse(localStorage.getItem('nabiulword_custom_fonts') || '[]');
+        const fontFileInput = document.getElementById('fontFileInput');
+        
+        // Initialize font system
+        function initFontSystem() {
+            loadCustomFonts();
+            renderFontHistory();
+        }
+        
+        // Load saved custom fonts
+        function loadCustomFonts() {
+            customFonts.forEach(font => {
+                if (font.data) {
+                    const style = document.createElement('style');
+                    style.id = `font-${font.id}`;
+                    style.textContent = `
+                        @font-face {
+                            font-family: '${font.name}';
+                            src: url(${font.data}) format('${font.format}');
+                            font-weight: normal;
+                            font-style: normal;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            });
+        }
+        
+        // Toggle font picker dropdown
+        function toggleFontPicker() {
+            saveSelection();
+            const dropdown = document.getElementById('fontDropdown');
+            dropdown.classList.toggle('show');
+            
+            // Close color dropdown if open
+            document.getElementById('colorDropdown').classList.remove('show');
+        }
+        
+        // Close font picker when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('fontDropdown');
+            const btn = document.getElementById('fontPickerBtn');
+            if (dropdown && !dropdown.contains(e.target) && btn && !btn.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        // Handle font file selection
+        fontFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const validExtensions = ['.ttf', '.otf', '.woff', '.woff2'];
+            const ext = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!validExtensions.includes(ext)) {
+                showToast('Invalid font file! Use TTF, OTF, WOFF, or WOFF2');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const fontData = event.target.result;
+                const fontName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+                const fontId = 'custom_' + Date.now();
+                
+                let format = 'truetype';
+                if (ext === '.otf') format = 'opentype';
+                else if (ext === '.woff') format = 'woff';
+                else if (ext === '.woff2') format = 'woff2';
+                
+                // Add font-face
+                const style = document.createElement('style');
+                style.id = `font-${fontId}`;
+                style.textContent = `
+                    @font-face {
+                        font-family: '${fontName}';
+                        src: url(${fontData}) format('${format}');
+                        font-weight: normal;
+                        font-style: normal;
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // Save to history
+                const fontObj = {
+                    id: fontId,
+                    name: fontName,
+                    data: fontData,
+                    format: format,
+                    addedAt: Date.now()
+                };
+                
+                // Remove duplicate if exists
+                customFonts = customFonts.filter(f => f.name.toLowerCase() !== fontName.toLowerCase());
+                customFonts.unshift(fontObj);
+                
+                // Keep only last 10 fonts to save storage
+                if (customFonts.length > 10) {
+                    const removed = customFonts.pop();
+                    const oldStyle = document.getElementById(`font-${removed.id}`);
+                    if (oldStyle) oldStyle.remove();
+                }
+                
+                saveCustomFonts();
+                renderFontHistory();
+                showToast(`Font "${fontName}" added!`);
+            };
+            
+            reader.readAsDataURL(file);
+            fontFileInput.value = '';
+        });
+        
+        // Save fonts to localStorage
+        function saveCustomFonts() {
+            // Save without data for storage efficiency (fonts will need re-add after clear)
+            const fontsToSave = customFonts.map(f => ({
+                id: f.id,
+                name: f.name,
+                data: f.data,
+                format: f.format,
+                addedAt: f.addedAt
+            }));
+            
+            try {
+                localStorage.setItem('nabiulword_custom_fonts', JSON.stringify(fontsToSave));
+            } catch (e) {
+                // If storage is full, remove old fonts
+                if (customFonts.length > 5) {
+                    customFonts = customFonts.slice(0, 5);
+                    saveCustomFonts();
+                }
+                showToast('Storage full! Older fonts removed.');
+            }
+        }
+        
+        // Render font history in dropdown
+        function renderFontHistory() {
+            const container = document.getElementById('fontHistory');
+            if (!container) return;
+            
+            // Prevent scroll from propagating to toolbar
+            container.addEventListener('wheel', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+            
+            container.addEventListener('touchmove', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+            
+            container.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+            
+            container.innerHTML = '';
+            
+            // Add default fonts first
+            const defaultFonts = ['Arial', 'Times New Roman', 'Georgia', 'Verdana', 'Courier New'];
+            defaultFonts.forEach(fontName => {
+                const item = document.createElement('div');
+                item.className = 'font-item';
+                item.innerHTML = `
+                    <span class="font-item-name" style="font-family: '${fontName}'">${fontName}</span>
+                    <span class="font-item-preview" style="font-family: '${fontName}'">Aa</span>
+                `;
+                item.onclick = () => applyFont(fontName);
+                container.appendChild(item);
+            });
+            
+            // Add separator if custom fonts exist
+            if (customFonts.length > 0) {
+                const separator = document.createElement('div');
+                separator.style.cssText = 'border-top: 1px dashed rgba(255,255,255,0.2); margin: 8px 0; padding-top: 4px;';
+                separator.innerHTML = '<small style="color:#6b7280;font-size:10px;">Custom Fonts</small>';
+                container.appendChild(separator);
+            }
+            
+            // Add custom fonts
+            customFonts.forEach(font => {
+                const item = document.createElement('div');
+                item.className = 'font-item';
+                item.innerHTML = `
+                    <span class="font-item-name" style="font-family: '${font.name}'">${font.name}</span>
+                    <span class="font-item-preview" style="font-family: '${font.name}'">Aa</span>
+                    <button class="font-item-delete" onclick="event.stopPropagation(); deleteFont('${font.id}')" title="Remove">×</button>
+                `;
+                item.onclick = () => applyFont(font.name);
+                container.appendChild(item);
+            });
+        }
+        
+        // Apply font to selected text
+        function applyFont(fontName) {
+            const restored = restoreSelection();
+            
+            setTimeout(() => {
+                const selection = window.getSelection();
+                const editorEl = document.getElementById('editor');
+                
+                const activeSelection = getActiveSelection();
+                if (!activeSelection && !restored) {
+                    // Apply to entire editor if no selection
+                    if (editorEl) {
+                        editorEl.style.fontFamily = `'${fontName}', sans-serif`;
+                        showToast(`Default font: ${fontName}`);
+                    }
+                    document.getElementById('fontDropdown').classList.remove('show');
+                    return;
+                }
+                
+                if (activeSelection) {
+                    selection.removeAllRanges();
+                    selection.addRange(activeSelection);
+                }
+                
+                const range = selection.getRangeAt(0);
+                if (range.collapsed || !editorEl || !editorEl.contains(range.commonAncestorContainer)) {
+                    // Apply to entire editor
+                    editorEl.style.fontFamily = `'${fontName}', sans-serif`;
+                    showToast(`Default font: ${fontName}`);
+                    document.getElementById('fontDropdown').classList.remove('show');
+                    return;
+                }
+                
+                // Apply to selected text
+                const span = document.createElement('span');
+                span.style.fontFamily = `'${fontName}', sans-serif`;
+                span.appendChild(range.extractContents());
+                range.insertNode(span);
+                
+                // Keep selection
+                const newRange = document.createRange();
+                newRange.selectNodeContents(span);
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+                
+                setTimeout(savePersistentSelection, 10);
+                showToast(`Font applied: ${fontName}`);
+                document.getElementById('fontDropdown').classList.remove('show');
+                editorEl.focus();
+            }, 10);
+        }
+        
+        // Delete custom font
+        function deleteFont(fontId) {
+            customFonts = customFonts.filter(f => f.id !== fontId);
+            
+            // Remove font-face style
+            const style = document.getElementById(`font-${fontId}`);
+            if (style) style.remove();
+            
+            saveCustomFonts();
+            renderFontHistory();
+            showToast('Font removed');
+        }
+        
+        // Initialize font system on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initFontSystem();
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key.toLowerCase()) {
+                    case 's':
+                        e.preventDefault();
+                        const editorEl = document.getElementById('editor');
+                        if (editorEl) localStorage.setItem('nabiulword_content', editorEl.innerHTML);
+                        showToast('Saved!');
+                        break;
+                    case 'b':
+                        e.preventDefault();
+                        formatText('bold');
+                        break;
+                    case 'i':
+                        e.preventDefault();
+                        formatText('italic');
+                        break;
+                    case 'u':
+                        e.preventDefault();
+                        formatText('underline');
+                        break;
+                }
+            }
+            
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                const selectedImg = document.querySelector('.draggable-image-container.selected');
+                const editorEl = document.getElementById('editor');
+                if (selectedImg && document.activeElement !== editorEl) {
+                    e.preventDefault();
+                    selectedImg.remove();
+                    showToast('Image deleted!');
+                }
+            }
+        });
+        
+        // =============== IMAGE CROP FUNCTIONALITY ===============
+        
+        const cropModal = document.getElementById('cropModal');
+        const cropImage = document.getElementById('cropImage');
+        const cropBox = document.getElementById('cropBox');
+        const cropContainer = document.getElementById('cropContainer');
+        
+        let currentImageData = null;
+        let pendingImages = [];
+        let currentAspectRatio = null;
+        let cropMode = 'new';
+        let existingImageContainer = null;
+        
+        let cropState = {
+            isDragging: false,
+            isResizing: false,
+            startX: 0,
+            startY: 0,
+            startLeft: 0,
+            startTop: 0,
+            startWidth: 0,
+            startHeight: 0,
+            handle: null
+        };
+        
+        document.querySelectorAll('.aspect-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.aspect-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const aspect = btn.dataset.aspect;
+                if (aspect === 'free') {
+                    currentAspectRatio = null;
+                } else {
+                    const [w, h] = aspect.split(':').map(Number);
+                    currentAspectRatio = w / h;
+                    adjustCropBoxToAspect();
+                }
+            });
+        });
+        
+        function adjustCropBoxToAspect() {
+            if (!currentAspectRatio) return;
+            
+            const boxWidth = cropBox.offsetWidth;
+            const containerRect = cropContainer.getBoundingClientRect();
+            const imgRect = cropImage.getBoundingClientRect();
+            
+            const imgOffsetX = imgRect.left - containerRect.left;
+            const imgOffsetY = imgRect.top - containerRect.top;
+            
+            let newWidth = boxWidth;
+            let newHeight = boxWidth / currentAspectRatio;
+            
+            if (newHeight > imgRect.height) {
+                newHeight = imgRect.height * 0.8;
+                newWidth = newHeight * currentAspectRatio;
+            }
+            
+            if (newWidth > imgRect.width) {
+                newWidth = imgRect.width * 0.8;
+                newHeight = newWidth / currentAspectRatio;
+            }
+            
+            cropBox.style.width = newWidth + 'px';
+            cropBox.style.height = newHeight + 'px';
+            
+            cropBox.style.left = (imgOffsetX + (imgRect.width - newWidth) / 2) + 'px';
+            cropBox.style.top = (imgOffsetY + (imgRect.height - newHeight) / 2) + 'px';
+        }
+        
+        imageInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files.length === 0) return;
+            
+            pendingImages = Array.from(files).filter(f => f.type.startsWith('image/'));
+            imageInput.value = '';
+            cropMode = 'new';
+            existingImageContainer = null;
+            
+            if (pendingImages.length > 0) {
+                processNextImage();
+            }
+        });
+        
+        function processNextImage() {
+            if (pendingImages.length === 0) {
+                return;
+            }
+            
+            const file = pendingImages.shift();
+            const reader = new FileReader();
+            
+            reader.onload = (event) => {
+                currentImageData = event.target.result;
+                showCropModal(currentImageData);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function cropExistingImage(container) {
+            if (!container) return;
+            
+            const img = container.querySelector('img');
+            if (!img) return;
+            
+            cropMode = 'existing';
+            existingImageContainer = container;
+            currentImageData = img.src;
+            
+            showCropModal(currentImageData);
+        }
+        
+        function showCropModal(imageSrc) {
+            cropImage.src = imageSrc;
+            cropModal.classList.add('show');
+            
+            currentAspectRatio = null;
+            document.querySelectorAll('.aspect-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.aspect-btn[data-aspect="free"]').classList.add('active');
+            
+            cropImage.onload = () => {
+                initCropBox();
+            };
+        }
+        
+        function initCropBox() {
+            const containerRect = cropContainer.getBoundingClientRect();
+            const imgRect = cropImage.getBoundingClientRect();
+            
+            const imgOffsetX = imgRect.left - containerRect.left;
+            const imgOffsetY = imgRect.top - containerRect.top;
+            
+            const boxWidth = imgRect.width * 0.8;
+            const boxHeight = imgRect.height * 0.8;
+            
+            cropBox.style.width = boxWidth + 'px';
+            cropBox.style.height = boxHeight + 'px';
+            cropBox.style.left = (imgOffsetX + (imgRect.width - boxWidth) / 2) + 'px';
+            cropBox.style.top = (imgOffsetY + (imgRect.height - boxHeight) / 2) + 'px';
+        }
+        
+        cropBox.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('crop-handle')) return;
+            
+            e.preventDefault();
+            cropState.isDragging = true;
+            cropState.startX = e.clientX;
+            cropState.startY = e.clientY;
+            cropState.startLeft = cropBox.offsetLeft;
+            cropState.startTop = cropBox.offsetTop;
+            
+            document.addEventListener('mousemove', onCropDrag);
+            document.addEventListener('mouseup', onCropDragEnd);
+        });
+        
+        cropBox.addEventListener('touchstart', (e) => {
+            if (e.target.classList.contains('crop-handle')) return;
+            
+            e.preventDefault();
+            const touch = e.touches[0];
+            cropState.isDragging = true;
+            cropState.startX = touch.clientX;
+            cropState.startY = touch.clientY;
+            cropState.startLeft = cropBox.offsetLeft;
+            cropState.startTop = cropBox.offsetTop;
+            
+            document.addEventListener('touchmove', onCropTouchDrag, { passive: false });
+            document.addEventListener('touchend', onCropDragEnd);
+        });
+        
+        function onCropDrag(e) {
+            if (!cropState.isDragging) return;
+            
+            const dx = e.clientX - cropState.startX;
+            const dy = e.clientY - cropState.startY;
+            
+            let newLeft = cropState.startLeft + dx;
+            let newTop = cropState.startTop + dy;
+            
+            const containerRect = cropContainer.getBoundingClientRect();
+            const imgRect = cropImage.getBoundingClientRect();
+            const imgOffsetX = imgRect.left - containerRect.left;
+            const imgOffsetY = imgRect.top - containerRect.top;
+            
+            newLeft = Math.max(imgOffsetX, Math.min(newLeft, imgOffsetX + imgRect.width - cropBox.offsetWidth));
+            newTop = Math.max(imgOffsetY, Math.min(newTop, imgOffsetY + imgRect.height - cropBox.offsetHeight));
+            
+            cropBox.style.left = newLeft + 'px';
+            cropBox.style.top = newTop + 'px';
+        }
+        
+        function onCropTouchDrag(e) {
+            if (!cropState.isDragging) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const dx = touch.clientX - cropState.startX;
+            const dy = touch.clientY - cropState.startY;
+            
+            let newLeft = cropState.startLeft + dx;
+            let newTop = cropState.startTop + dy;
+            
+            const containerRect = cropContainer.getBoundingClientRect();
+            const imgRect = cropImage.getBoundingClientRect();
+            const imgOffsetX = imgRect.left - containerRect.left;
+            const imgOffsetY = imgRect.top - containerRect.top;
+            
+            newLeft = Math.max(imgOffsetX, Math.min(newLeft, imgOffsetX + imgRect.width - cropBox.offsetWidth));
+            newTop = Math.max(imgOffsetY, Math.min(newTop, imgOffsetY + imgRect.height - cropBox.offsetHeight));
+            
+            cropBox.style.left = newLeft + 'px';
+            cropBox.style.top = newTop + 'px';
+        }
+        
+        function onCropDragEnd() {
+            cropState.isDragging = false;
+            document.removeEventListener('mousemove', onCropDrag);
+            document.removeEventListener('mouseup', onCropDragEnd);
+            document.removeEventListener('touchmove', onCropTouchDrag);
+            document.removeEventListener('touchend', onCropDragEnd);
+        }
+        
+        document.querySelectorAll('.crop-handle').forEach(handle => {
+            handle.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                cropState.isResizing = true;
+                cropState.handle = e.target.dataset.handle;
+                cropState.startX = e.clientX;
+                cropState.startY = e.clientY;
+                cropState.startWidth = cropBox.offsetWidth;
+                cropState.startHeight = cropBox.offsetHeight;
+                cropState.startLeft = cropBox.offsetLeft;
+                cropState.startTop = cropBox.offsetTop;
+                
+                document.addEventListener('mousemove', onCropResize);
+                document.addEventListener('mouseup', onCropResizeEnd);
+            });
+            
+            handle.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const touch = e.touches[0];
+                cropState.isResizing = true;
+                cropState.handle = e.target.dataset.handle;
+                cropState.startX = touch.clientX;
+                cropState.startY = touch.clientY;
+                cropState.startWidth = cropBox.offsetWidth;
+                cropState.startHeight = cropBox.offsetHeight;
+                cropState.startLeft = cropBox.offsetLeft;
+                cropState.startTop = cropBox.offsetTop;
+                
+                document.addEventListener('touchmove', onCropTouchResize, { passive: false });
+                document.addEventListener('touchend', onCropResizeEnd);
+            });
+        });
+        
+        function onCropResize(e) {
+            if (!cropState.isResizing) return;
+            
+            const dx = e.clientX - cropState.startX;
+            const dy = e.clientY - cropState.startY;
+            
+            resizeCropBox(dx, dy);
+        }
+        
+        function onCropTouchResize(e) {
+            if (!cropState.isResizing) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const dx = touch.clientX - cropState.startX;
+            const dy = touch.clientY - cropState.startY;
+            
+            resizeCropBox(dx, dy);
+        }
+        
+        function resizeCropBox(dx, dy) {
+            let newWidth = cropState.startWidth;
+            let newHeight = cropState.startHeight;
+            let newLeft = cropState.startLeft;
+            let newTop = cropState.startTop;
+            
+            const handle = cropState.handle;
+            
+            if (handle.includes('r') || handle === 'br' || handle === 'tr') {
+                newWidth = Math.max(50, cropState.startWidth + dx);
+            }
+            if (handle.includes('l') || handle === 'bl' || handle === 'tl') {
+                newWidth = Math.max(50, cropState.startWidth - dx);
+                newLeft = cropState.startLeft + (cropState.startWidth - newWidth);
+            }
+            if (handle.includes('b') || handle === 'br' || handle === 'bl') {
+                newHeight = Math.max(50, cropState.startHeight + dy);
+            }
+            if (handle.includes('t') || handle === 'tr' || handle === 'tl') {
+                newHeight = Math.max(50, cropState.startHeight - dy);
+                newTop = cropState.startTop + (cropState.startHeight - newHeight);
+            }
+            
+            if (currentAspectRatio) {
+                if (handle === 'br' || handle === 'tr') {
+                    newHeight = newWidth / currentAspectRatio;
+                } else if (handle === 'bl' || handle === 'tl') {
+                    newHeight = newWidth / currentAspectRatio;
+                } else {
+                    newWidth = newHeight * currentAspectRatio;
+                }
+            }
+            
+            const containerRect = cropContainer.getBoundingClientRect();
+            const imgRect = cropImage.getBoundingClientRect();
+            const imgOffsetX = imgRect.left - containerRect.left;
+            const imgOffsetY = imgRect.top - containerRect.top;
+            
+            newLeft = Math.max(imgOffsetX, newLeft);
+            newTop = Math.max(imgOffsetY, newTop);
+            newWidth = Math.min(newWidth, imgOffsetX + imgRect.width - newLeft);
+            newHeight = Math.min(newHeight, imgOffsetY + imgRect.height - newTop);
+            
+            cropBox.style.width = newWidth + 'px';
+            cropBox.style.height = newHeight + 'px';
+            cropBox.style.left = newLeft + 'px';
+            cropBox.style.top = newTop + 'px';
+        }
+        
+        function onCropResizeEnd() {
+            cropState.isResizing = false;
+            document.removeEventListener('mousemove', onCropResize);
+            document.removeEventListener('mouseup', onCropResizeEnd);
+            document.removeEventListener('touchmove', onCropTouchResize);
+            document.removeEventListener('touchend', onCropResizeEnd);
+        }
+        
+        function applyCrop() {
+            const containerRect = cropContainer.getBoundingClientRect();
+            const imgRect = cropImage.getBoundingClientRect();
+            
+            const imgOffsetX = imgRect.left - containerRect.left;
+            const imgOffsetY = imgRect.top - containerRect.top;
+            
+            const cropX = cropBox.offsetLeft - imgOffsetX;
+            const cropY = cropBox.offsetTop - imgOffsetY;
+            const cropWidth = cropBox.offsetWidth;
+            const cropHeight = cropBox.offsetHeight;
+            
+            const scaleX = cropImage.naturalWidth / imgRect.width;
+            const scaleY = cropImage.naturalHeight / imgRect.height;
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = cropWidth * scaleX;
+            canvas.height = cropHeight * scaleY;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(
+                cropImage,
+                cropX * scaleX,
+                cropY * scaleY,
+                cropWidth * scaleX,
+                cropHeight * scaleY,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+            
+            const croppedImage = canvas.toDataURL('image/png');
+            
+            cropModal.classList.remove('show');
+            
+            if (cropMode === 'existing' && existingImageContainer) {
+                const img = existingImageContainer.querySelector('img');
+                if (img) {
+                    img.src = croppedImage;
+                }
+                showToast('Image cropped!');
+            } else {
+                createDraggableImage(croppedImage, 50, 100);
+                showToast('Image cropped & added!');
+            }
+            
+            existingImageContainer = null;
+            cropMode = 'new';
+            
+            if (pendingImages.length > 0) {
+                setTimeout(processNextImage, 300);
+            }
+        }
+        
+        function skipCrop() {
+            cropModal.classList.remove('show');
+            
+            if (cropMode === 'existing' && existingImageContainer) {
+                showToast('Crop cancelled');
+            } else {
+                createDraggableImage(currentImageData, 50, 100);
+                showToast('Image added!');
+            }
+            
+            existingImageContainer = null;
+            cropMode = 'new';
+            
+            if (pendingImages.length > 0) {
+                setTimeout(processNextImage, 300);
+            }
+        }
+        
+        function cancelCrop() {
+            cropModal.classList.remove('show');
+            currentImageData = null;
+            existingImageContainer = null;
+            cropMode = 'new';
+            
+            if (pendingImages.length > 0) {
+                setTimeout(processNextImage, 300);
+            }
+        }
+        
+        // =============== IMAGE FUNCTIONALITY ===============
+        
+        let selectedImage = null;
+        let isDragging = false;
+        let isResizing = false;
+        let isRotating = false;
+        let startX, startY, startWidth, startHeight, startLeft, startTop, startAngle, centerX, centerY;
+        
+        function createDraggableImage(src, x = 50, y = 100, width = 150, height = 'auto', rotation = 0) {
+            const firstPage = document.querySelector('.a4-page');
+            if (!firstPage) return null;
+            
+            const container = document.createElement('div');
+            container.className = 'draggable-image-container';
+            container.style.cssText = `left: ${x}px; top: ${y}px; width: ${width}px;`;
+            if (rotation !== 0) {
+                container.style.transform = `rotate(${rotation}deg)`;
+            }
+            container.dataset.rotation = rotation;
+            
+            const img = document.createElement('img');
+            img.src = src;
+            img.draggable = false;
+            if (height !== 'auto') {
+                img.style.height = height + 'px';
+            }
+            
+            const controls = document.createElement('div');
+            controls.className = 'image-controls';
+            controls.innerHTML = `
+                <button onclick="resizeImageBy(this.closest('.draggable-image-container'), -20)" title="Smaller">−</button>
+                <button onclick="resizeImageBy(this.closest('.draggable-image-container'), 20)" title="Bigger">+</button>
+                <button onclick="rotateImageBy(this.closest('.draggable-image-container'), -15)" title="Rotate Left">↶</button>
+                <button onclick="rotateImageBy(this.closest('.draggable-image-container'), 15)" title="Rotate Right">↷</button>
+                <button class="opacity-btn" onclick="toggleOpacitySlider(this.closest('.draggable-image-container'))" title="Opacity">◐</button>
+                <button class="layer-btn" onclick="toggleImageLayer(this.closest('.draggable-image-container'))" title="Send Behind Text">⇩</button>
+                <button class="crop-btn" onclick="cropExistingImage(this.closest('.draggable-image-container'))" title="Crop">✂</button>
+                <button class="delete-btn" onclick="deleteImage(this.closest('.draggable-image-container'))" title="Delete">✕</button>
+            `;
+            
+            // Add opacity slider
+            const opacitySlider = document.createElement('div');
+            opacitySlider.className = 'image-opacity-slider';
+            opacitySlider.innerHTML = `
+                <label>Opacity</label>
+                <input type="range" min="10" max="100" value="100" oninput="changeImageOpacity(this.closest('.draggable-image-container'), this.value)">
+                <span class="opacity-value">100%</span>
+            `;
+            
+            const resizeNW = document.createElement('div');
+            resizeNW.className = 'resize-handle nw';
+            resizeNW.dataset.handle = 'nw';
+            
+            const resizeNE = document.createElement('div');
+            resizeNE.className = 'resize-handle ne';
+            resizeNE.dataset.handle = 'ne';
+            
+            const resizeSW = document.createElement('div');
+            resizeSW.className = 'resize-handle sw';
+            resizeSW.dataset.handle = 'sw';
+            
+            const resizeSE = document.createElement('div');
+            resizeSE.className = 'resize-handle se';
+            resizeSE.dataset.handle = 'se';
+            
+            const rotateHandle = document.createElement('div');
+            rotateHandle.className = 'rotate-handle';
+            
+            container.appendChild(img);
+            container.appendChild(controls);
+            container.appendChild(opacitySlider);
+            container.appendChild(resizeNW);
+            container.appendChild(resizeNE);
+            container.appendChild(resizeSW);
+            container.appendChild(resizeSE);
+            container.appendChild(rotateHandle);
+            
+            firstPage.appendChild(container);
+            
+            container.addEventListener('mousedown', onImageMouseDown);
+            container.addEventListener('touchstart', onImageTouchStart, { passive: false });
+            
+            [resizeNW, resizeNE, resizeSW, resizeSE].forEach(handle => {
+                handle.addEventListener('mousedown', onResizeStart);
+                handle.addEventListener('touchstart', onResizeTouchStart, { passive: false });
+            });
+            
+            rotateHandle.addEventListener('mousedown', onRotateStart);
+            rotateHandle.addEventListener('touchstart', onRotateTouchStart, { passive: false });
+            
+            return container;
+        }
+        
+        function selectImage(container) {
+            document.querySelectorAll('.draggable-image-container').forEach(c => {
+                c.classList.remove('selected');
+            });
+            
+            if (container) {
+                container.classList.add('selected');
+                selectedImage = container;
+            } else {
+                selectedImage = null;
+            }
+        }
+        
+        function onImageMouseDown(e) {
+            if (e.target.classList.contains('resize-handle') || 
+                e.target.classList.contains('rotate-handle') ||
+                e.target.tagName === 'BUTTON') {
+                return;
+            }
+            
+            e.preventDefault();
+            const container = e.currentTarget;
+            selectImage(container);
+            
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startLeft = container.offsetLeft;
+            startTop = container.offsetTop;
+            
+            document.addEventListener('mousemove', onImageDrag);
+            document.addEventListener('mouseup', onImageDragEnd);
+        }
+        
+        function onImageTouchStart(e) {
+            if (e.target.classList.contains('resize-handle') || 
+                e.target.classList.contains('rotate-handle') ||
+                e.target.tagName === 'BUTTON') {
+                return;
+            }
+            
+            e.preventDefault();
+            const container = e.currentTarget;
+            selectImage(container);
+            
+            const touch = e.touches[0];
+            isDragging = true;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            startLeft = container.offsetLeft;
+            startTop = container.offsetTop;
+            
+            document.addEventListener('touchmove', onImageTouchDrag, { passive: false });
+            document.addEventListener('touchend', onImageDragEnd);
+        }
+        
+        function onImageDrag(e) {
+            if (!isDragging || !selectedImage) return;
+            
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            
+            selectedImage.style.left = (startLeft + dx) + 'px';
+            selectedImage.style.top = (startTop + dy) + 'px';
+        }
+        
+        function onImageTouchDrag(e) {
+            if (!isDragging || !selectedImage) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+            
+            selectedImage.style.left = (startLeft + dx) + 'px';
+            selectedImage.style.top = (startTop + dy) + 'px';
+        }
+        
+        function onImageDragEnd() {
+            isDragging = false;
+            document.removeEventListener('mousemove', onImageDrag);
+            document.removeEventListener('mouseup', onImageDragEnd);
+            document.removeEventListener('touchmove', onImageTouchDrag);
+            document.removeEventListener('touchend', onImageDragEnd);
+        }
+        
+        function onResizeStart(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isResizing = true;
+            const container = e.target.closest('.draggable-image-container');
+            selectImage(container);
+            
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = container.offsetWidth;
+            startHeight = container.offsetHeight;
+            startLeft = container.offsetLeft;
+            startTop = container.offsetTop;
+            
+            document.addEventListener('mousemove', onResize);
+            document.addEventListener('mouseup', onResizeEnd);
+        }
+        
+        function onResizeTouchStart(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isResizing = true;
+            const container = e.target.closest('.draggable-image-container');
+            selectImage(container);
+            
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+            startWidth = container.offsetWidth;
+            startHeight = container.offsetHeight;
+            startLeft = container.offsetLeft;
+            startTop = container.offsetTop;
+            
+            document.addEventListener('touchmove', onResizeTouch, { passive: false });
+            document.addEventListener('touchend', onResizeEnd);
+        }
+        
+        function onResize(e) {
+            if (!isResizing || !selectedImage) return;
+            
+            const dx = e.clientX - startX;
+            const newWidth = Math.max(50, startWidth + dx);
+            selectedImage.style.width = newWidth + 'px';
+        }
+        
+        function onResizeTouch(e) {
+            if (!isResizing || !selectedImage) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const dx = touch.clientX - startX;
+            
+            const newWidth = Math.max(50, startWidth + dx);
+            selectedImage.style.width = newWidth + 'px';
+        }
+        
+        function onResizeEnd() {
+            isResizing = false;
+            document.removeEventListener('mousemove', onResize);
+            document.removeEventListener('mouseup', onResizeEnd);
+            document.removeEventListener('touchmove', onResizeTouch);
+            document.removeEventListener('touchend', onResizeEnd);
+        }
+        
+        function onRotateStart(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isRotating = true;
+            const container = e.target.closest('.draggable-image-container');
+            selectImage(container);
+            
+            const rect = container.getBoundingClientRect();
+            centerX = rect.left + rect.width / 2;
+            centerY = rect.top + rect.height / 2;
+            
+            startAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+            
+            document.addEventListener('mousemove', onRotate);
+            document.addEventListener('mouseup', onRotateEnd);
+        }
+        
+        function onRotateTouchStart(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isRotating = true;
+            const container = e.target.closest('.draggable-image-container');
+            selectImage(container);
+            
+            const rect = container.getBoundingClientRect();
+            centerX = rect.left + rect.width / 2;
+            centerY = rect.top + rect.height / 2;
+            
+            const touch = e.touches[0];
+            startAngle = Math.atan2(touch.clientY - centerY, touch.clientX - centerX);
+            
+            document.addEventListener('touchmove', onRotateTouch, { passive: false });
+            document.addEventListener('touchend', onRotateEnd);
+        }
+        
+        function onRotate(e) {
+            if (!isRotating || !selectedImage) return;
+            
+            const currentAngle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+            const rotation = (currentAngle - startAngle) * (180 / Math.PI);
+            const currentRotation = parseFloat(selectedImage.dataset.rotation) || 0;
+            const newRotation = currentRotation + rotation;
+            
+            selectedImage.style.transform = `rotate(${newRotation}deg)`;
+            selectedImage.dataset.rotation = newRotation;
+            startAngle = currentAngle;
+        }
+        
+        function onRotateTouch(e) {
+            if (!isRotating || !selectedImage) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const currentAngle = Math.atan2(touch.clientY - centerY, touch.clientX - centerX);
+            const rotation = (currentAngle - startAngle) * (180 / Math.PI);
+            const currentRotation = parseFloat(selectedImage.dataset.rotation) || 0;
+            const newRotation = currentRotation + rotation;
+            
+            selectedImage.style.transform = `rotate(${newRotation}deg)`;
+            selectedImage.dataset.rotation = newRotation;
+            startAngle = currentAngle;
+        }
+        
+        function onRotateEnd() {
+            isRotating = false;
+            document.removeEventListener('mousemove', onRotate);
+            document.removeEventListener('mouseup', onRotateEnd);
+            document.removeEventListener('touchmove', onRotateTouch);
+            document.removeEventListener('touchend', onRotateEnd);
+        }
+        
+        function resizeImageBy(container, amount) {
+            if (!container) return;
+            const currentWidth = container.offsetWidth;
+            const newWidth = Math.max(30, currentWidth + amount);
+            container.style.width = newWidth + 'px';
+        }
+        
+        function rotateImageBy(container, degrees) {
+            if (!container) return;
+            const currentRotation = parseFloat(container.dataset.rotation) || 0;
+            const newRotation = currentRotation + degrees;
+            container.style.transform = `rotate(${newRotation}deg)`;
+            container.dataset.rotation = newRotation;
+        }
+        
+        function deleteImage(container) {
+            if (!container) return;
+            if (confirm('Delete this image?')) {
+                container.remove();
+                selectedImage = null;
+                showToast('Image deleted!');
+            }
+        }
+        
+        // Toggle opacity slider visibility
+        function toggleOpacitySlider(container) {
+            if (!container) return;
+            const slider = container.querySelector('.image-opacity-slider');
+            if (slider) {
+                slider.classList.toggle('show');
+            }
+        }
+        
+        // Change image opacity
+        function changeImageOpacity(container, value) {
+            if (!container) return;
+            const img = container.querySelector('img');
+            const valueSpan = container.querySelector('.opacity-value');
+            if (img) {
+                img.style.opacity = value / 100;
+                container.dataset.opacity = value;
+            }
+            if (valueSpan) {
+                valueSpan.textContent = value + '%';
+            }
+        }
+        
+        // Toggle image layer (send behind text or bring to front)
+        function toggleImageLayer(container) {
+            if (!container) return;
+            const isBehind = container.classList.contains('behind-text');
+            
+            if (isBehind) {
+                // Bring to front
+                container.classList.remove('behind-text');
+                container.style.zIndex = '50';
+                showToast('Image brought to front');
+            } else {
+                // Send behind text
+                container.classList.add('behind-text');
+                container.style.zIndex = '2';
+                showToast('Image sent behind text');
+            }
+        }
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.draggable-image-container') && 
+                !e.target.closest('.toolbar') &&
+                !e.target.closest('#sideMenu')) {
+                selectImage(null);
+                // Hide all opacity sliders
+                document.querySelectorAll('.image-opacity-slider.show').forEach(slider => {
+                    slider.classList.remove('show');
+                });
+            }
+        });
+
+        // =============== TOOLBAR SCROLL FUNCTIONALITY ===============
+        let toolbarBaseTop = 55; // Default top position
+        let isToolbarCustomPositioned = false;
+        
+        function initToolbarScroll() {
+            window.addEventListener('scroll', () => {
+                // Only auto-scroll if toolbar hasn't been manually positioned
+                if (!isToolbarCustomPositioned) {
+                    const scrollY = window.scrollY;
+                    toolbar.style.top = (toolbarBaseTop + scrollY) + 'px';
+                }
+            });
+        }
+        
+        // Initialize scroll on load
+        initToolbarScroll();
+        
+        // =============== TOOLBAR DRAG FUNCTIONALITY ===============
+        function initToolbarDrag() {
+            let isToolbarDragging = false;
+            let toolbarStartX = 0;
+            let toolbarStartY = 0;
+            let toolbarInitialLeft = 0;
+            let toolbarInitialTop = 0;
+
+            const startDrag = (clientX, clientY) => {
+                isToolbarDragging = true;
+                const rect = toolbar.getBoundingClientRect();
+                toolbarInitialLeft = rect.left;
+                toolbarInitialTop = rect.top;
+                toolbarStartX = clientX;
+                toolbarStartY = clientY;
+
+                document.addEventListener('mousemove', onDragMove);
+                document.addEventListener('mouseup', onDragEnd);
+                document.addEventListener('touchmove', onDragMoveTouch, { passive: false });
+                document.addEventListener('touchend', onDragEnd);
+            };
+
+            const onDragMove = (e) => {
+                if (!isToolbarDragging) return;
+                e.preventDefault();
+                const dx = e.clientX - toolbarStartX;
+                const dy = e.clientY - toolbarStartY;
+
+                moveToolbar(toolbarInitialLeft + dx, toolbarInitialTop + dy);
+            };
+
+            const onDragMoveTouch = (e) => {
+                if (!isToolbarDragging) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                const dx = touch.clientX - toolbarStartX;
+                const dy = touch.clientY - toolbarStartY;
+
+                moveToolbar(toolbarInitialLeft + dx, toolbarInitialTop + dy);
+            };
+
+            const onDragEnd = () => {
+                if (!isToolbarDragging) return;
+                isToolbarDragging = false;
+                isToolbarCustomPositioned = true; // Mark as manually positioned
+                document.removeEventListener('mousemove', onDragMove);
+                document.removeEventListener('mouseup', onDragEnd);
+                document.removeEventListener('touchmove', onDragMoveTouch);
+                document.removeEventListener('touchend', onDragEnd);
+
+                const rect = toolbar.getBoundingClientRect();
+                const scrollY = window.scrollY;
+                localStorage.setItem('nabiulword_toolbar_position', JSON.stringify({
+                    top: rect.top + scrollY, // Save absolute position
+                    left: rect.left,
+                    customPositioned: true
+                }));
+            };
+
+            const moveToolbar = (left, top) => {
+                const margin = 10;
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const rect = toolbar.getBoundingClientRect();
+
+                const maxLeft = vw - rect.width - margin;
+                const maxTop = vh - rect.height - margin;
+
+                const finalLeft = Math.min(Math.max(margin, left), maxLeft);
+                const finalTop = Math.min(Math.max(margin, top), maxTop);
+
+                toolbar.style.left = finalLeft + 'px';
+                toolbar.style.top = finalTop + 'px';
+                toolbar.style.transform = 'translate(0, 0)';
+            };
+
+            toolbar.addEventListener('mousedown', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SVG' || e.target.tagName === 'PATH') return;
+                // Don't drag if clicking inside font dropdown or color dropdown
+                if (e.target.closest('.font-dropdown') || e.target.closest('.color-dropdown') || e.target.closest('.font-history')) return;
+                startDrag(e.clientX, e.clientY);
+            });
+
+            toolbar.addEventListener('touchstart', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SVG' || e.target.tagName === 'PATH') return;
+                // Don't drag if touching inside font dropdown or color dropdown
+                if (e.target.closest('.font-dropdown') || e.target.closest('.color-dropdown') || e.target.closest('.font-history')) return;
+                const touch = e.touches[0];
+                startDrag(touch.clientX, touch.clientY);
+            }, { passive: false });
+        }
     </script>
 </body>
 </html>
