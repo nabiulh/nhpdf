@@ -329,8 +329,8 @@
             position: absolute;
             bottom: 12mm;
             right: 10mm;
-            width: 2.5in;
-            height: 2.5in;
+            width: 1.5in;
+            height: 2in;
             opacity: 0.5;
             pointer-events: none;
             z-index: 1;
@@ -2327,8 +2327,8 @@
                             const watermarkImg = document.querySelector('.watermark img');
                             if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
                                 pdf.setGState(new pdf.GState({opacity: 0.5}));
-                                // Width: 2.5in = 63.5mm, Height: 2.5in = 63.5mm (square container, image preserves aspect ratio)
-                                pdf.addImage(watermarkImg.src, 'PNG', 141, 218, 63.5, 63.5, '', 'FAST', 0);
+                                // Width: 1.5in = 38.1mm, Height: 2in = 50.8mm
+                                pdf.addImage(watermarkImg.src, 'PNG', 162, 231, 38.1, 50.8, '', 'FAST', 0);
                                 pdf.setGState(new pdf.GState({opacity: 1}));
                             }
                         } catch(err) {}
