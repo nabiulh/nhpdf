@@ -330,7 +330,7 @@
             position: absolute;
             bottom: 12mm;
             right: 10mm;
-            width: 2in;
+            width: 1.6in;
             height: 2in;
             opacity: 0.5;
             pointer-events: none;
@@ -1509,6 +1509,150 @@
                 min-height: auto;
             }
         }
+        
+        /* =============== BOOK MODE PAGE STYLES =============== */
+        .book-page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            margin: 0 auto 30px auto;
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.08),
+                0 2px 8px rgba(0,0,0,0.08),
+                0 8px 32px rgba(0,0,0,0.12),
+                0 16px 48px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10mm;
+            overflow: hidden;
+        }
+        
+        /* Book page border */
+        .book-page::before {
+            content: '';
+            position: absolute;
+            top: 6mm;
+            left: 6mm;
+            right: 6mm;
+            bottom: 6mm;
+            border: 2px solid #000;
+            pointer-events: none;
+        }
+        
+        .book-page::after {
+            content: '';
+            position: absolute;
+            top: 7.5mm;
+            left: 7.5mm;
+            right: 7.5mm;
+            bottom: 7.5mm;
+            border: 0.8px solid #000000;
+            pointer-events: none;
+        }
+        
+        .book-page .page-number {
+            position: absolute;
+            bottom: 8mm;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #000;
+            background: white;
+            padding: 2px 12px;
+            border-radius: 3px;
+            border: 1px solid #333;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        .book-page .watermark {
+            position: absolute;
+            bottom: 12mm;
+            right: 10mm;
+            width: 1.6in;
+            height: 2in;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .book-page .watermark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Book page images container */
+        .book-images-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            width: calc(100% - 10mm);
+            height: calc(100% - 20mm);
+            gap: 5mm;
+            padding: 5mm 0;
+            margin-top: 5mm;
+        }
+        
+        .book-images-container.images-1 {
+            justify-content: center;
+        }
+        
+        .book-images-container.images-2 {
+            justify-content: space-evenly;
+        }
+        
+        .book-images-container.images-3 {
+            justify-content: space-evenly;
+        }
+        
+        .book-image-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .book-images-container.images-1 .book-image-wrapper {
+            max-height: calc(100% - 10mm);
+        }
+        
+        .book-images-container.images-2 .book-image-wrapper {
+            max-height: calc(50% - 5mm);
+        }
+        
+        .book-images-container.images-3 .book-image-wrapper {
+            max-height: calc(33.33% - 5mm);
+        }
+        
+        .book-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border: 1px solid #ddd;
+        }
+        
+        /* Responsive book pages */
+        @media screen and (max-width: 900px) {
+            .book-page {
+                width: 95%;
+                height: auto;
+                min-height: 400px;
+            }
+        }
+        
+        @media screen and (max-width: 600px) {
+            .book-page {
+                width: 100%;
+                height: auto;
+                min-height: 300px;
+            }
+        }
     </style>
 </head>
 <body class="theme-default">
@@ -1516,6 +1660,8 @@
     <input type="file" id="imageInput" accept="image/*" multiple>
     <!-- Hidden PDF Input -->
     <input type="file" id="pdfInput" accept=".pdf" style="display:none">
+    <!-- Hidden Book Mode Image Input -->
+    <input type="file" id="bookImageInput" accept="image/*" multiple style="display:none">
     
     <!-- Hamburger Menu Button -->
     <div class="hamburger" id="hamburgerBtn">
@@ -1783,6 +1929,14 @@
                     </div>
                     <span class="text-sm">Import PDF</span>
                 </button>
+                <button onclick="document.getElementById('bookImageInput').click(); closeSideMenu();" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
+                    <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center group-hover:bg-amber-500/30">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm">📖 Book Mode (Images)</span>
+                </button>
             </nav>
 
             <div class="border-t border-white/10 pt-4">
@@ -1868,7 +2022,23 @@
                                 <div class="w-9 h-5 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
                             </label>
                         </div>
-                        <p class="text-[9px] text-gray-500 text-center">These options apply to PDF export</p>
+                        <!-- Images Per Page for Book Mode -->
+                        <div class="flex items-center justify-between p-2.5 bg-white/5 rounded-lg">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded bg-amber-500/20 flex items-center justify-center">
+                                    <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-xs text-gray-300">Images/Page</span>
+                            </div>
+                            <select id="imagesPerPage" class="bg-gray-700 text-white text-xs rounded-lg px-2 py-1 border border-gray-600 focus:outline-none focus:border-amber-500">
+                                <option value="1">1 Image</option>
+                                <option value="2" selected>2 Images</option>
+                                <option value="3">3 Images</option>
+                            </select>
+                        </div>
+                        <p class="text-[9px] text-gray-500 text-center">These options apply to PDF export & Book Mode</p>
                     </div>
                 </div>
 
@@ -2256,6 +2426,8 @@
                 document.querySelectorAll('.page-break-line').forEach(el => el.remove());
                 // Clear imported PDF pages
                 document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+                // Clear book pages
+                document.querySelectorAll('.book-page').forEach(el => el.remove());
                 const originalPage = document.getElementById('pageContainer');
                 if (originalPage) originalPage.style.display = 'block';
                 localStorage.removeItem('nabiulword_content');
@@ -2279,6 +2451,8 @@
                 document.querySelectorAll('.page-break-line').forEach(el => el.remove());
                 // Clear imported PDF pages
                 document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+                // Clear book pages
+                document.querySelectorAll('.book-page').forEach(el => el.remove());
                 const originalPage = document.getElementById('pageContainer');
                 if (originalPage) originalPage.style.display = 'block';
                 localStorage.removeItem('nabiulword_content');
@@ -2481,8 +2655,8 @@
                             const watermarkImg = document.querySelector('.watermark img');
                             if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
                                 pdf.setGState(new pdf.GState({opacity: 0.5}));
-                                // Width: 2in = 50.8mm, Height: 2in = 50.8mm (square container, image preserves aspect ratio)
-                                pdf.addImage(watermarkImg.src, 'PNG', 152, 231, 50.8, 50.8, '', 'FAST', 0);
+                                // Width: 1.6in = 40.64mm, Height: 2in = 50.8mm
+                                pdf.addImage(watermarkImg.src, 'PNG', 159, 231, 40.64, 50.8, '', 'FAST', 0);
                                 pdf.setGState(new pdf.GState({opacity: 1}));
                             }
                         } catch(err) {}
@@ -4089,6 +4263,116 @@
             localStorage.removeItem('nabiulword_imported_pdf');
             totalPages = 1;
             updatePageInfo();
+        }
+        
+        // =============== BOOK MODE FUNCTIONALITY ===============
+        const bookImageInput = document.getElementById('bookImageInput');
+        
+        bookImageInput.addEventListener('change', async (e) => {
+            const files = e.target.files;
+            if (files.length === 0) return;
+            
+            const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+            if (imageFiles.length === 0) {
+                showToast('Please select image files!');
+                return;
+            }
+            
+            // Get images per page setting
+            const imagesPerPage = parseInt(document.getElementById('imagesPerPage').value) || 2;
+            
+            // Show loading
+            showToast(`Processing ${imageFiles.length} images...`);
+            
+            // Clear existing content
+            const editorEl = document.getElementById('editor');
+            if (editorEl) editorEl.innerHTML = '';
+            
+            // Remove existing pages
+            document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+            document.querySelectorAll('.book-page').forEach(el => el.remove());
+            document.querySelectorAll('.draggable-image-container').forEach(el => el.remove());
+            
+            // Hide the original editor page
+            const originalPage = document.getElementById('pageContainer');
+            if (originalPage) {
+                originalPage.style.display = 'none';
+            }
+            
+            // Get pages wrapper
+            const pagesWrapperEl = document.getElementById('pagesWrapper');
+            
+            // Load all images as data URLs
+            const imageDataUrls = [];
+            for (const file of imageFiles) {
+                const dataUrl = await readFileAsDataURL(file);
+                imageDataUrls.push(dataUrl);
+            }
+            
+            // Calculate number of pages needed
+            const totalPagesNeeded = Math.ceil(imageDataUrls.length / imagesPerPage);
+            
+            // Create book pages
+            for (let pageNum = 0; pageNum < totalPagesNeeded; pageNum++) {
+                const startIdx = pageNum * imagesPerPage;
+                const endIdx = Math.min(startIdx + imagesPerPage, imageDataUrls.length);
+                const pageImages = imageDataUrls.slice(startIdx, endIdx);
+                
+                // Create page
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'book-page';
+                pageDiv.dataset.page = pageNum + 1;
+                
+                // Create images container
+                const imagesContainer = document.createElement('div');
+                imagesContainer.className = `book-images-container images-${imagesPerPage}`;
+                
+                // Add images
+                pageImages.forEach((imgSrc, idx) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'book-image-wrapper';
+                    
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = `Image ${startIdx + idx + 1}`;
+                    
+                    wrapper.appendChild(img);
+                    imagesContainer.appendChild(wrapper);
+                });
+                
+                // Create page number
+                const pageNumberDiv = document.createElement('div');
+                pageNumberDiv.className = 'page-number';
+                pageNumberDiv.textContent = `Page ${pageNum + 1}`;
+                
+                // Create watermark
+                const watermarkDiv = document.createElement('div');
+                watermarkDiv.className = 'watermark';
+                watermarkDiv.innerHTML = '<img src="watermark.png" alt="" onerror="this.parentElement.style.display=\'none\'">';
+                
+                pageDiv.appendChild(imagesContainer);
+                pageDiv.appendChild(pageNumberDiv);
+                pageDiv.appendChild(watermarkDiv);
+                pagesWrapperEl.appendChild(pageDiv);
+            }
+            
+            // Update total pages
+            totalPages = totalPagesNeeded;
+            updatePageInfo();
+            
+            showToast(`📖 Book created: ${imageDataUrls.length} images in ${totalPagesNeeded} pages (${imagesPerPage} per page)`);
+            
+            bookImageInput.value = '';
+        });
+        
+        // Helper function to read file as data URL
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         }
         
         // =============== TOOLBAR DRAG FUNCTIONALITY ===============
