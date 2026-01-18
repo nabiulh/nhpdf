@@ -330,7 +330,7 @@
             position: absolute;
             bottom: 12mm;
             right: 10mm;
-            width: 1.6in;
+            width: 1.54in;
             height: 2in;
             opacity: 0.5;
             pointer-events: none;
@@ -1572,7 +1572,7 @@
             position: absolute;
             bottom: 12mm;
             right: 10mm;
-            width: 1.6in;
+            width: 1.54in;
             height: 2in;
             opacity: 0.5;
             pointer-events: none;
@@ -2572,39 +2572,51 @@
             
             // Get all draggable images and add them to PDF
             const images = document.querySelectorAll('.draggable-image-container');
-            images.forEach(imgContainer => {
-                const img = imgContainer.querySelector('img');
-                if (img && img.src) {
-                    const imgClone = document.createElement('img');
-                    imgClone.src = img.src;
-                    
-                    // Get computed styles
-                    const containerRect = imgContainer.getBoundingClientRect();
-                    const pageRect = document.querySelector('.a4-page').getBoundingClientRect();
-                    
-                    // Calculate relative position
-                    const relativeLeft = imgContainer.offsetLeft;
-                    const relativeTop = imgContainer.offsetTop;
-                    const imgWidth = imgContainer.offsetWidth;
-                    const rotation = imgContainer.dataset.rotation || 0;
-                    const opacity = imgContainer.dataset.opacity ? (imgContainer.dataset.opacity / 100) : 1;
-                    const isBehindText = imgContainer.classList.contains('behind-text');
-                    
-                    imgClone.style.cssText = `
-                        position: absolute;
-                        left: ${relativeLeft}px;
-                        top: ${relativeTop}px;
-                        width: ${imgWidth}px;
-                        height: auto;
-                        transform: rotate(${rotation}deg);
-                        opacity: ${opacity};
-                        z-index: ${isBehindText ? '1' : '10'};
-                        page-break-inside: avoid !important;
-                    `;
-                    imgClone.className = 'pdf-image';
-                    contentDiv.appendChild(imgClone);
-                }
-            });
+            if (images.length > 0) {
+                // Create a container for images with proper positioning
+                const imagesWrapper = document.createElement('div');
+                imagesWrapper.style.cssText = 'position: relative; width: 100%; min-height: 200px;';
+                
+                images.forEach(imgContainer => {
+                    const img = imgContainer.querySelector('img');
+                    if (img && img.src) {
+                        const imgClone = document.createElement('img');
+                        imgClone.src = img.src;
+                        
+                        // Get position relative to page
+                        const relativeLeft = imgContainer.offsetLeft;
+                        const relativeTop = imgContainer.offsetTop;
+                        const imgWidth = imgContainer.offsetWidth;
+                        const imgHeight = imgContainer.offsetHeight;
+                        const rotation = imgContainer.dataset.rotation || 0;
+                        const opacity = imgContainer.dataset.opacity ? (imgContainer.dataset.opacity / 100) : 1;
+                        const isBehindText = imgContainer.classList.contains('behind-text');
+                        
+                        imgClone.style.cssText = `
+                            position: absolute;
+                            left: ${relativeLeft}px;
+                            top: ${relativeTop}px;
+                            width: ${imgWidth}px;
+                            height: auto;
+                            max-width: 100%;
+                            transform: rotate(${rotation}deg);
+                            opacity: ${opacity};
+                            z-index: ${isBehindText ? '1' : '10'};
+                            page-break-inside: avoid !important;
+                            display: block;
+                        `;
+                        imgClone.className = 'pdf-image';
+                        
+                        if (isBehindText) {
+                            // Add behind text images first
+                            contentDiv.insertBefore(imgClone, contentDiv.firstChild);
+                        } else {
+                            // Add front images after content
+                            contentDiv.appendChild(imgClone);
+                        }
+                    }
+                });
+            }
             
             pdfContainer.appendChild(contentDiv);
             
@@ -2655,8 +2667,8 @@
                             const watermarkImg = document.querySelector('.watermark img');
                             if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
                                 pdf.setGState(new pdf.GState({opacity: 0.5}));
-                                // Width: 1.6in = 40.64mm, Height: 2in = 50.8mm
-                                pdf.addImage(watermarkImg.src, 'PNG', 159, 231, 40.64, 50.8, '', 'FAST', 0);
+                                // Width: 1.54in = 39.116mm, Height: 2in = 50.8mm
+                                pdf.addImage(watermarkImg.src, 'PNG', 161, 231, 39.116, 50.8, '', 'FAST', 0);
                                 pdf.setGState(new pdf.GState({opacity: 1}));
                             }
                         } catch(err) {}
