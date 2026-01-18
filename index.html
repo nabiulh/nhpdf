@@ -6,6 +6,7 @@
     <title>NabiulWord - Smart Notepad</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -329,7 +330,7 @@
             position: absolute;
             bottom: 12mm;
             right: 10mm;
-            width: 1.5in;
+            width: 2in;
             height: 2in;
             opacity: 0.5;
             pointer-events: none;
@@ -1408,11 +1409,113 @@
                 font-size: 11px;
             }
         }
+        
+        /* =============== IMPORTED PDF PAGE STYLES =============== */
+        .imported-pdf-page {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: 0 auto 30px auto;
+            box-shadow: 
+                0 0 0 1px rgba(0,0,0,0.08),
+                0 2px 8px rgba(0,0,0,0.08),
+                0 8px 32px rgba(0,0,0,0.12),
+                0 16px 48px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .imported-pdf-page img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .imported-pdf-page .page-number {
+            position: absolute;
+            bottom: 8mm;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: #000;
+            background: white;
+            padding: 2px 12px;
+            border-radius: 3px;
+            border: 1px solid #333;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        /* PDF Import Loading Overlay */
+        .pdf-loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .pdf-loading-overlay.show {
+            display: flex;
+        }
+        
+        .pdf-loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(99, 102, 241, 0.3);
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .pdf-loading-text {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .pdf-loading-progress {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        /* Responsive imported PDF pages */
+        @media screen and (max-width: 900px) {
+            .imported-pdf-page {
+                width: 95%;
+                min-height: auto;
+            }
+        }
+        
+        @media screen and (max-width: 600px) {
+            .imported-pdf-page {
+                width: 100%;
+                min-height: auto;
+            }
+        }
     </style>
 </head>
 <body class="theme-default">
     <!-- Hidden Image Input -->
     <input type="file" id="imageInput" accept="image/*" multiple>
+    <!-- Hidden PDF Input -->
+    <input type="file" id="pdfInput" accept=".pdf" style="display:none">
     
     <!-- Hamburger Menu Button -->
     <div class="hamburger" id="hamburgerBtn">
@@ -1672,6 +1775,14 @@
                     </div>
                     <span class="text-sm">Export as PDF</span>
                 </button>
+                <button onclick="document.getElementById('pdfInput').click(); closeSideMenu();" class="w-full flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/10 transition-all text-left group">
+                    <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center group-hover:bg-rose-500/30">
+                        <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm">Import PDF</span>
+                </button>
             </nav>
 
             <div class="border-t border-white/10 pt-4">
@@ -1855,6 +1966,13 @@
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl shadow-2xl z-50 opacity-0 transition-all duration-300 translate-y-10">
         <span id="toastMessage">Saved successfully!</span>
+    </div>
+    
+    <!-- PDF Loading Overlay -->
+    <div class="pdf-loading-overlay" id="pdfLoadingOverlay">
+        <div class="pdf-loading-spinner"></div>
+        <div class="pdf-loading-text">Loading PDF...</div>
+        <div class="pdf-loading-progress" id="pdfLoadingProgress">Page 0 of 0</div>
     </div>
 
     <script>
@@ -2136,8 +2254,13 @@
                 const images = document.querySelectorAll('.draggable-image-container');
                 images.forEach(img => img.remove());
                 document.querySelectorAll('.page-break-line').forEach(el => el.remove());
+                // Clear imported PDF pages
+                document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+                const originalPage = document.getElementById('pageContainer');
+                if (originalPage) originalPage.style.display = 'block';
                 localStorage.removeItem('nabiulword_content');
                 localStorage.removeItem('nabiulword_images');
+                localStorage.removeItem('nabiulword_imported_pdf');
                 totalPages = 1;
                 updatePageInfo();
                 showToast('New document created!');
@@ -2154,8 +2277,13 @@
                 const images = document.querySelectorAll('.draggable-image-container');
                 images.forEach(img => img.remove());
                 document.querySelectorAll('.page-break-line').forEach(el => el.remove());
+                // Clear imported PDF pages
+                document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+                const originalPage = document.getElementById('pageContainer');
+                if (originalPage) originalPage.style.display = 'block';
                 localStorage.removeItem('nabiulword_content');
                 localStorage.removeItem('nabiulword_images');
+                localStorage.removeItem('nabiulword_imported_pdf');
                 
                 const defaultSize = 20;
                 if (editorEl) editorEl.style.fontSize = defaultSize + 'px';
@@ -2175,8 +2303,14 @@
         function generateSmartPdfName() {
             const editorEl = document.getElementById('editor');
             const text = editorEl ? editorEl.innerText : '';
+            const hasImages = document.querySelectorAll('.draggable-image-container').length > 0;
             
             if (!text.trim()) {
+                if (hasImages) {
+                    const date = new Date();
+                    const dateStr = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}`;
+                    return `NabiulWord_Image_Document_${dateStr}`;
+                }
                 return 'NabiulWord_Empty_Document';
             }
             
@@ -2207,8 +2341,10 @@
         exportBtn.addEventListener('click', async () => {
             const editorEl = document.getElementById('editor');
             const content = editorEl ? editorEl.innerHTML : '';
-            if (!content.trim() && document.querySelectorAll('.draggable-image-container').length === 0) {
-                showToast('Please add some content first!');
+            const hasImages = document.querySelectorAll('.draggable-image-container').length > 0;
+            
+            if (!content.trim() && !hasImages) {
+                showToast('Please add some content or image first!');
                 return;
             }
             
@@ -2257,21 +2393,39 @@
             pdfContainer.appendChild(style);
             
             const contentDiv = document.createElement('div');
+            contentDiv.style.cssText = 'position: relative; min-height: 100%;';
             contentDiv.innerHTML = content;
             
+            // Get all draggable images and add them to PDF
             const images = document.querySelectorAll('.draggable-image-container');
             images.forEach(imgContainer => {
                 const img = imgContainer.querySelector('img');
-                if (img) {
+                if (img && img.src) {
                     const imgClone = document.createElement('img');
                     imgClone.src = img.src;
+                    
+                    // Get computed styles
+                    const containerRect = imgContainer.getBoundingClientRect();
+                    const pageRect = document.querySelector('.a4-page').getBoundingClientRect();
+                    
+                    // Calculate relative position
+                    const relativeLeft = imgContainer.offsetLeft;
+                    const relativeTop = imgContainer.offsetTop;
+                    const imgWidth = imgContainer.offsetWidth;
+                    const rotation = imgContainer.dataset.rotation || 0;
+                    const opacity = imgContainer.dataset.opacity ? (imgContainer.dataset.opacity / 100) : 1;
+                    const isBehindText = imgContainer.classList.contains('behind-text');
+                    
                     imgClone.style.cssText = `
                         position: absolute;
-                        left: ${imgContainer.style.left};
-                        top: ${imgContainer.style.top};
-                        width: ${imgContainer.style.width};
-                        height: ${imgContainer.style.height};
-                        transform: ${imgContainer.style.transform};
+                        left: ${relativeLeft}px;
+                        top: ${relativeTop}px;
+                        width: ${imgWidth}px;
+                        height: auto;
+                        transform: rotate(${rotation}deg);
+                        opacity: ${opacity};
+                        z-index: ${isBehindText ? '1' : '10'};
+                        page-break-inside: avoid !important;
                     `;
                     imgClone.className = 'pdf-image';
                     contentDiv.appendChild(imgClone);
@@ -2327,8 +2481,8 @@
                             const watermarkImg = document.querySelector('.watermark img');
                             if (watermarkImg && watermarkImg.src && !watermarkImg.src.includes('data:')) {
                                 pdf.setGState(new pdf.GState({opacity: 0.5}));
-                                // Width: 1.5in = 38.1mm, Height: 2in = 50.8mm
-                                pdf.addImage(watermarkImg.src, 'PNG', 162, 231, 38.1, 50.8, '', 'FAST', 0);
+                                // Width: 2in = 50.8mm, Height: 2in = 50.8mm (square container, image preserves aspect ratio)
+                                pdf.addImage(watermarkImg.src, 'PNG', 152, 231, 50.8, 50.8, '', 'FAST', 0);
                                 pdf.setGState(new pdf.GState({opacity: 1}));
                             }
                         } catch(err) {}
@@ -3814,6 +3968,128 @@
         
         // Initialize scroll on load
         initToolbarScroll();
+        
+        // =============== PDF IMPORT FUNCTIONALITY ===============
+        const pdfInput = document.getElementById('pdfInput');
+        const pdfLoadingOverlay = document.getElementById('pdfLoadingOverlay');
+        const pdfLoadingProgress = document.getElementById('pdfLoadingProgress');
+        
+        // Set PDF.js worker
+        if (typeof pdfjsLib !== 'undefined') {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+        
+        pdfInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            if (file.type !== 'application/pdf') {
+                showToast('Please select a PDF file!');
+                return;
+            }
+            
+            // Show loading overlay
+            pdfLoadingOverlay.classList.add('show');
+            pdfLoadingProgress.textContent = 'Preparing...';
+            
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                const numPages = pdf.numPages;
+                
+                // Clear existing content
+                const editorEl = document.getElementById('editor');
+                if (editorEl) editorEl.innerHTML = '';
+                
+                // Remove existing imported pages
+                document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+                document.querySelectorAll('.draggable-image-container').forEach(el => el.remove());
+                
+                // Get pages wrapper
+                const pagesWrapperEl = document.getElementById('pagesWrapper');
+                
+                // Hide the original editor page
+                const originalPage = document.getElementById('pageContainer');
+                if (originalPage) {
+                    originalPage.style.display = 'none';
+                }
+                
+                // Render each page
+                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                    pdfLoadingProgress.textContent = `Page ${pageNum} of ${numPages}`;
+                    
+                    const page = await pdf.getPage(pageNum);
+                    
+                    // Set scale for good quality (2x for retina)
+                    const scale = 2;
+                    const viewport = page.getViewport({ scale: scale });
+                    
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    
+                    // Render page to canvas
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+                    
+                    // Convert canvas to image
+                    const imgDataUrl = canvas.toDataURL('image/png');
+                    
+                    // Create page container
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'imported-pdf-page';
+                    pageDiv.dataset.page = pageNum;
+                    
+                    // Create image element
+                    const img = document.createElement('img');
+                    img.src = imgDataUrl;
+                    img.alt = `Page ${pageNum}`;
+                    
+                    // Create page number
+                    const pageNumberDiv = document.createElement('div');
+                    pageNumberDiv.className = 'page-number';
+                    pageNumberDiv.textContent = `Page ${pageNum}`;
+                    
+                    pageDiv.appendChild(img);
+                    pageDiv.appendChild(pageNumberDiv);
+                    pagesWrapperEl.appendChild(pageDiv);
+                }
+                
+                // Update total pages
+                totalPages = numPages;
+                updatePageInfo();
+                
+                // Hide loading overlay
+                pdfLoadingOverlay.classList.remove('show');
+                showToast(`PDF loaded: ${numPages} pages`);
+                
+                // Save imported PDF info
+                localStorage.setItem('nabiulword_imported_pdf', 'true');
+                
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                pdfLoadingOverlay.classList.remove('show');
+                showToast('Error loading PDF!');
+            }
+            
+            pdfInput.value = '';
+        });
+        
+        // Function to clear imported PDF and show editor again
+        function clearImportedPdf() {
+            document.querySelectorAll('.imported-pdf-page').forEach(el => el.remove());
+            const originalPage = document.getElementById('pageContainer');
+            if (originalPage) {
+                originalPage.style.display = 'block';
+            }
+            localStorage.removeItem('nabiulword_imported_pdf');
+            totalPages = 1;
+            updatePageInfo();
+        }
         
         // =============== TOOLBAR DRAG FUNCTIONALITY ===============
         function initToolbarDrag() {
